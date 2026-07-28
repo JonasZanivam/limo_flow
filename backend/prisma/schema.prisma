@@ -43,14 +43,30 @@ enum PaymentMethod {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  password  String
-  role      UserRole @default(DRIVER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  events    Event[]  @relation("EventDriver")
+  id            String         @id @default(uuid())
+  name          String
+  email         String         @unique
+  password      String
+  role          UserRole       @default(DRIVER)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  events        Event[]        @relation("EventDriver")
+  refreshTokens RefreshToken[]
+}
+
+model RefreshToken {
+  id        String    @id @default(uuid())
+  tokenHash String    @unique
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  revokedAt DateTime?
+  userAgent String?
+  ipAddress String?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
 }
 
 model Client {

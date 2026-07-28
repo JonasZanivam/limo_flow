@@ -1,0 +1,58 @@
+services:
+  loki:
+    image: grafana/loki:3.4.2
+    container_name: limoflow-loki
+    restart: unless-stopped
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./observability/loki-config.yaml:/etc/loki/local-config.yaml:ro
+      - loki_data:/loki
+
+  tempo:
+    image: grafana/tempo:2.7.1
+    container_name: limoflow-tempo
+    restart: unless-stopped
+    command: ["-config.file=/etc/tempo.yaml"]
+    volumes:
+      - ./observability/tempo.yaml:/etc/tempo.yaml:ro
+      - tempo_data:/var/tempo
+    ports:
+      - "3200:3200"
+      - "4317:4317"
+      - "4318:4318"
+
+  promtail:
+    image: grafana/promtail:3.4.2
+    container_name: limoflow-promtail
+    restart: unless-stopped
+    command: -config.file=/etc/promtail/config.yml
+    volumes:
+      - ./observability/promtail-config.yaml:/etc/promtail/config.yml:ro
+      - ./backend/logs:/var/log/limoflow:ro
+    depends_on:
+      - loki
+
+  grafana:
+    image: grafana/grafana:11.5.2
+    container_name: limoflow-grafana
+    restart: unless-stopped
+    ports:
+      - "3030:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_DEFAULT_THEME: dark
+      GF_AUTH_ANONYMOUS_ENABLED: "false"
+    volumes:
+      - ./observability/grafana/provisioning:/etc/grafana/provisioning:ro
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - loki
+      - tempo
+
+volumes:
+  loki_data:
+  tempo_data:
+  grafana_data:

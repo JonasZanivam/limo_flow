@@ -26,6 +26,7 @@ Thumbs.db
 
 # Uploads (local dev)
 backend/uploads/
+backend/logs/
 
 # Prisma
 backend/prisma/*.db
@@ -39,4 +40,8 @@ coverage/
 frontend/.vite/
 
 # Docker volumes (local)
-postgres_data/
+e2e/node_modules/
+e2e/test-results/
+e2e/playwright-report/
+e2e/blob-report/
+e2e/playwright/.cache/

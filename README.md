@@ -45,6 +45,63 @@ npm run dev
 | API        | http://localhost:3000      |
 | Health     | http://localhost:3000/health |
 | PostgreSQL | localhost:5432             |
+| **Grafana** | http://localhost:3030       |
+
+## Observabilidade (Grafana + Loki + Tempo)
+
+Stack local para **logs** e **traces** da API:
+
+```bash
+# Subir PostgreSQL + Grafana/Loki/Tempo/Promtail
+docker compose -f docker-compose.yml -f docker-compose.observability.yml up -d
+```
+
+No `backend/.env`, ative:
+
+```env
+LOG_TO_FILE=true
+OTEL_ENABLED=true
+OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318/v1/traces
+```
+
+Reinicie o backend (`npm run start:dev`). Os logs JSON vão para `backend/logs/app.log` e o Promtail envia para o Loki.
+
+### Acessar Grafana
+
+| Campo | Valor |
+|-------|-------|
+| URL | http://localhost:3030 |
+| Usuário | `admin` |
+| Senha | `admin` |
+
+### Ver logs
+
+1. Grafana → **Explore** (ícone de bússola)
+2. Datasource: **Loki**
+3. Query: `{job="limoflow-api"}`
+4. Run query
+
+### Ver traces
+
+1. Grafana → **Explore**
+2. Datasource: **Tempo**
+3. Search → Service Name: `limoflow-api`
+
+> **Nota:** Enquanto o backend roda com `npm run start:dev` no host (não em Docker), os logs vão via arquivo `backend/logs/app.log`. Traces vão via OTLP para o Tempo na porta 4318.
+
+Documentação completa: [docs/observabilidade.md](docs/observabilidade.md)
+
+## Testes
+
+```bash
+# Unitários + E2E API (backend)
+cd backend && npm test && npm run test:e2e
+
+# E2E UI + API (Playwright)
+cd e2e && npm install && npx playwright install chromium && npm test
+```
+
+Documentação completa: [docs/testes.md](docs/testes.md)
 
 ## Credenciais demo (seed)
 
@@ -72,7 +129,8 @@ limo_flow/
 Ver issues do repositório para o roadmap completo.
 
 - [x] Scaffold monorepo
-- [ ] Auth JWT + roles
+- [x] Auth JWT + roles (backend)
+- [ ] Auth frontend (login + rotas protegidas)
 - [ ] Clientes e Veículos
 - [ ] Agenda
 - [ ] Propostas e Contratos
