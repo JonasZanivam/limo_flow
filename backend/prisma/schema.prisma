@@ -1,0 +1,178 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  DRIVER
+}
+
+enum EventStatus {
+  CONFIRMED
+  QUOTE
+  CANCELLED
+}
+
+enum ProposalStatus {
+  SENT
+  WAITING
+  ACCEPTED
+  REJECTED
+}
+
+enum PaymentType {
+  DEPOSIT
+  BALANCE
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  OVERDUE
+}
+
+enum PaymentMethod {
+  PIX
+  CASH
+  CARD
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      UserRole @default(DRIVER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  events    Event[]  @relation("EventDriver")
+}
+
+model Client {
+  id           String     @id @default(uuid())
+  brideName    String
+  groomName    String
+  phones       String[]
+  email        String?
+  weddingDate  DateTime?  @db.Date
+  church       String?
+  venue        String?
+  notes        String?
+  referredById String?
+  referredBy   Client?    @relation("ClientReferral", fields: [referredById], references: [id])
+  referrals    Client[]   @relation("ClientReferral")
+  events       Event[]
+  proposals    Proposal[]
+  payments     Payment[]
+  contracts    Contract[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model Vehicle {
+  id           String          @id @default(uuid())
+  plate        String          @unique
+  model        String
+  capacity     Int
+  events       Event[]
+  proposals    Proposal[]
+  maintenances Maintenance[]
+  photos       VehiclePhoto[]
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+}
+
+model Event {
+  id        String          @id @default(uuid())
+  startAt   DateTime
+  endAt     DateTime
+  status    EventStatus     @default(QUOTE)
+  church    String?
+  venue     String?
+  clientId  String
+  client    Client          @relation(fields: [clientId], references: [id])
+  vehicleId String?
+  vehicle   Vehicle?        @relation(fields: [vehicleId], references: [id])
+  driverId  String?
+  driver    User?           @relation("EventDriver", fields: [driverId], references: [id])
+  checklist EventChecklist?
+  payments  Payment[]
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+}
+
+model Proposal {
+  id        String         @id @default(uuid())
+  value     Decimal        @db.Decimal(10, 2)
+  hours     Int
+  mileage   Decimal?       @db.Decimal(10, 2)
+  status    ProposalStatus @default(SENT)
+  clientId  String
+  client    Client         @relation(fields: [clientId], references: [id])
+  vehicleId String?
+  vehicle   Vehicle?       @relation(fields: [vehicleId], references: [id])
+  contract  Contract?
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+}
+
+model Contract {
+  id         String   @id @default(uuid())
+  content    String   @db.Text
+  clientId   String
+  client     Client   @relation(fields: [clientId], references: [id])
+  proposalId String   @unique
+  proposal   Proposal @relation(fields: [proposalId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Payment {
+  id        String         @id @default(uuid())
+  amount    Decimal        @db.Decimal(10, 2)
+  type      PaymentType
+  status    PaymentStatus  @default(PENDING)
+  method    PaymentMethod?
+  dueDate   DateTime?      @db.Date
+  paidAt    DateTime?
+  clientId  String
+  client    Client         @relation(fields: [clientId], references: [id])
+  eventId   String?
+  event     Event?         @relation(fields: [eventId], references: [id])
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+}
+
+model EventChecklist {
+  id              String  @id @default(uuid())
+  eventId         String  @unique
+  event           Event   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  carWashed       Boolean @default(false)
+  decorated       Boolean @default(false)
+  driverConfirmed Boolean @default(false)
+  fuel            Boolean @default(false)
+  documentation   Boolean @default(false)
+}
+
+model Maintenance {
+  id          String   @id @default(uuid())
+  vehicleId   String
+  vehicle     Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  date        DateTime @db.Date
+  description String
+  cost        Decimal  @db.Decimal(10, 2)
+  createdAt   DateTime @default(now())
+}
+
+model VehiclePhoto {
+  id        String   @id @default(uuid())
+  vehicleId String
+  vehicle   Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  path      String
+  createdAt DateTime @default(now())
+}

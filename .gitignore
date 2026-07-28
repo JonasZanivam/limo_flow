@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+
+# Build
+dist/
+build/
+*.tsbuildinfo
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+.cursor/
+
+# Uploads (local dev)
+backend/uploads/
+
+# Prisma
+backend/prisma/*.db
+backend/prisma/*.db-journal
+
+# Test / coverage
+coverage/
+.nyc_output/
+
+# Vite
+frontend/.vite/
+
+# Docker volumes (local)
+postgres_data/
