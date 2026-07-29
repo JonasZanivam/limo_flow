@@ -8,6 +8,7 @@ import { LoginPage } from '@/features/auth/LoginPage';
 import { DashboardPage } from '@/features/dashboard/DashboardPage';
 import { PlaceholderPage } from '@/features/PlaceholderPage';
 import { UsersPage } from '@/features/users/UsersPage';
+import { VehiclesPage } from '@/features/vehicles/VehiclesPage';
 
 export function AppRouter() {
   return (
@@ -59,15 +60,7 @@ export function AppRouter() {
                   />
                 }
               />
-              <Route
-                path="veiculos"
-                element={
-                  <PlaceholderPage
-                    title="Veículos"
-                    description="Frota, fotos e manutenções."
-                  />
-                }
-              />
+              <Route path="veiculos" element={<VehiclesPage />} />
               <Route path="usuarios" element={<UsersPage />} />
             </Route>
 

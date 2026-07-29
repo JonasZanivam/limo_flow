@@ -51,4 +51,18 @@ test.describe('Frontend smoke', () => {
       page.getByRole('button', { name: 'Novo usuário' }),
     ).toBeVisible();
   });
+
+  test('deve listar veículos na página de frota', async ({ page }) => {
+    await loginAsAdmin(page);
+    await page.goto('/veiculos');
+
+    await expect(
+      page.getByRole('heading', { name: 'Veículos' }),
+    ).toBeVisible();
+    await expect(page.getByText('ABC-1D23')).toBeVisible();
+    await expect(page.getByText('Mercedes-Benz Sprinter Luxo')).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: 'Novo veículo' }),
+    ).toBeVisible();
+  });
 });
