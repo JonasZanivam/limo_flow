@@ -1,8 +1,24 @@
-import { NavLink, Outlet } from 'react-router-dom';
-import { navItems } from './nav-items';
+import { LogOut } from 'lucide-react';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { getNavItemsForRole } from './nav-items';
+import { useAuth } from '@/features/auth/AuthContext';
+import { ROLE_LABELS } from '@/types/auth';
 import { cn } from '@/lib/utils';
 
 export function AppLayout() {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  if (!user) return null;
+
+  const visibleNavItems = getNavItemsForRole(user.role);
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/login', { replace: true });
+  };
+
   return (
     <div className="flex min-h-screen bg-background">
       <aside className="hidden w-64 shrink-0 border-r border-sidebar-border bg-sidebar text-sidebar-foreground md:flex md:flex-col">
@@ -15,7 +31,7 @@ export function AppLayout() {
           </p>
         </div>
         <nav className="flex flex-1 flex-col gap-1 p-3">
-          {navItems.map((item) => (
+          {visibleNavItems.map((item) => (
             <NavLink
               key={item.href}
               to={item.href}
@@ -37,11 +53,22 @@ export function AppLayout() {
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="border-b px-4 py-4 md:px-8">
-          <h1 className="text-lg font-semibold">LimoFlow</h1>
-          <p className="text-sm text-muted-foreground">
-            Scaffold inicial — módulos em desenvolvimento
-          </p>
+        <header className="flex items-center justify-between border-b px-4 py-4 md:px-8">
+          <div>
+            <h1 className="text-lg font-semibold">LimoFlow</h1>
+            <p className="text-sm text-muted-foreground">
+              Bem-vindo, {user.name}
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="hidden rounded-full bg-primary/15 px-3 py-1 text-xs font-medium text-primary sm:inline">
+              {ROLE_LABELS[user.role]}
+            </span>
+            <Button variant="outline" size="sm" onClick={handleLogout}>
+              <LogOut className="size-4" />
+              Sair
+            </Button>
+          </div>
         </header>
         <main className="flex-1 p-4 md:p-8">
           <Outlet />
