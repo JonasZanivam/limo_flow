@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from '@/features/auth/AuthContext';
+import { useAuth } from '@/features/auth/use-auth';
 
 export function GuestRoute() {
   const { isAuthenticated, isLoading } = useAuth();

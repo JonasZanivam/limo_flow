@@ -1,15 +1,10 @@
 import axios, { type AxiosError, type InternalAxiosRequestConfig } from 'axios';
-import {
-  clearAuthSession,
-  getAccessToken,
-  getRefreshToken,
-  setAuthSession,
-} from '@/lib/auth-storage';
 
-const baseURL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000';
+const baseURL = import.meta.env.VITE_API_URL ?? '/api';
 
 const api = axios.create({
   baseURL,
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -18,7 +13,7 @@ const api = axios.create({
 let onUnauthorized: (() => void) | null = null;
 let isRefreshing = false;
 let refreshQueue: Array<{
-  resolve: (token: string) => void;
+  resolve: () => void;
   reject: (error: unknown) => void;
 }> = [];
 
@@ -26,21 +21,13 @@ export function setOnUnauthorized(handler: () => void) {
   onUnauthorized = handler;
 }
 
-function processRefreshQueue(error: unknown, token: string | null) {
+function processRefreshQueue(error: unknown) {
   refreshQueue.forEach(({ resolve, reject }) => {
     if (error) reject(error);
-    else if (token) resolve(token);
+    else resolve();
   });
   refreshQueue = [];
 }
-
-api.interceptors.request.use((config) => {
-  const token = getAccessToken();
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
 
 api.interceptors.response.use(
   (response) => response,
@@ -54,50 +41,27 @@ api.interceptors.response.use(
       !originalRequest ||
       originalRequest._retry ||
       originalRequest.url?.includes('/auth/login') ||
-      originalRequest.url?.includes('/auth/refresh')
+      originalRequest.url?.includes('/auth/refresh') ||
+      originalRequest.url?.includes('/auth/me')
     ) {
       return Promise.reject(error);
     }
 
-    const refreshToken = getRefreshToken();
-    if (!refreshToken) {
-      clearAuthSession();
-      onUnauthorized?.();
-      return Promise.reject(error);
-    }
-
     if (isRefreshing) {
-      return new Promise<string>((resolve, reject) => {
+      return new Promise<void>((resolve, reject) => {
         refreshQueue.push({ resolve, reject });
-      }).then((token) => {
-        originalRequest.headers.Authorization = `Bearer ${token}`;
-        return api(originalRequest);
-      });
+      }).then(() => api(originalRequest));
     }
 
     originalRequest._retry = true;
     isRefreshing = true;
 
     try {
-      const { data } = await axios.post<{
-        accessToken: string;
-        refreshToken: string;
-        user: { id: string; name: string; email: string; role: string };
-      }>(`${baseURL}/auth/refresh`, { refreshToken });
-
-      setAuthSession(data.accessToken, data.refreshToken, {
-        id: data.user.id,
-        name: data.user.name,
-        email: data.user.email,
-        role: data.user.role as 'ADMIN' | 'DRIVER',
-      });
-
-      processRefreshQueue(null, data.accessToken);
-      originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
+      await api.post('/auth/refresh');
+      processRefreshQueue(null);
       return api(originalRequest);
     } catch (refreshError) {
-      processRefreshQueue(refreshError, null);
-      clearAuthSession();
+      processRefreshQueue(refreshError);
       onUnauthorized?.();
       return Promise.reject(refreshError);
     } finally {

@@ -35,4 +35,18 @@ test.describe('Frontend smoke', () => {
       page.getByText('CRUD de clientes com indicação e ações WhatsApp.'),
     ).toBeVisible();
   });
+
+  test('deve listar usuários na página de equipe', async ({ page }) => {
+    await loginAsAdmin(page);
+    await page.goto('/usuarios');
+
+    await expect(
+      page.getByRole('heading', { name: 'Usuários' }),
+    ).toBeVisible();
+    await expect(page.getByText('admin@limoflow.com')).toBeVisible();
+    await expect(page.getByText('motorista@limoflow.com')).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: 'Novo usuário' }),
+    ).toBeVisible();
+  });
 });

@@ -13,7 +13,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { useAuth } from '@/features/auth/AuthContext';
+import { useAuth } from '@/features/auth/use-auth';
 import { cn } from '@/lib/utils';
 
 const loginSchema = z.object({

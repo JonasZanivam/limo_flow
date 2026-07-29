@@ -1,5 +1,6 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 
 export function applySecurity(app: INestApplication): void {
@@ -12,6 +13,8 @@ export function applySecurity(app: INestApplication): void {
       crossOriginResourcePolicy: { policy: 'same-site' },
     }),
   );
+
+  app.use(cookieParser());
 
   app.enableCors({
     origin: frontendUrl ?? 'http://localhost:5173',

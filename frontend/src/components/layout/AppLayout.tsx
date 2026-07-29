@@ -2,7 +2,7 @@ import { LogOut } from 'lucide-react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { getNavItemsForRole } from './nav-items';
-import { useAuth } from '@/features/auth/AuthContext';
+import { useAuth } from '@/features/auth/use-auth';
 import { ROLE_LABELS } from '@/types/auth';
 import { cn } from '@/lib/utils';
 

@@ -6,6 +6,7 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { LoginPage } from '@/features/auth/LoginPage';
 import { DashboardPage } from '@/features/dashboard/DashboardPage';
 import { PlaceholderPage } from '@/features/PlaceholderPage';
+import { UsersPage } from '@/features/users/UsersPage';
 
 export function AppRouter() {
   return (
@@ -74,15 +75,7 @@ export function AppRouter() {
                   />
                 }
               />
-              <Route
-                path="usuarios"
-                element={
-                  <PlaceholderPage
-                    title="Usuários"
-                    description="Gerenciamento de administradores e motoristas."
-                  />
-                }
-              />
+              <Route path="usuarios" element={<UsersPage />} />
             </Route>
 
             <Route path="*" element={<Navigate to="/" replace />} />

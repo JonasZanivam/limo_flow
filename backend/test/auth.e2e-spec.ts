@@ -7,8 +7,6 @@ import { AppModule } from '../src/app.module';
 
 describe('Auth (e2e)', () => {
   let app: INestApplication<App>;
-  let accessToken: string;
-  let refreshToken: string;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -39,7 +37,9 @@ describe('Auth (e2e)', () => {
   });
 
   it('/auth/login (POST) deve autenticar admin demo', async () => {
-    const response = await request(app.getHttpServer())
+    const agent = request.agent(app.getHttpServer());
+
+    const response = await agent
       .post('/auth/login')
       .send({
         email: process.env.SEED_ADMIN_EMAIL ?? 'admin@limoflow.com',
@@ -47,42 +47,42 @@ describe('Auth (e2e)', () => {
       })
       .expect(200);
 
-    expect(response.body.accessToken).toBeDefined();
-    expect(response.body.refreshToken).toBeDefined();
     expect(response.body.user.role).toBe('ADMIN');
+    expect(response.body.accessToken).toBeUndefined();
+    expect(response.headers['set-cookie']).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining('access_token='),
+        expect.stringContaining('refresh_token='),
+      ]),
+    );
 
-    accessToken = response.body.accessToken;
-    refreshToken = response.body.refreshToken;
-  });
-
-  it('/users (GET) deve listar usuários para ADMIN', () => {
-    return request(app.getHttpServer())
+    await agent
       .get('/users')
-      .set('Authorization', `Bearer ${accessToken}`)
       .expect(200)
       .expect((res) => {
         expect(Array.isArray(res.body)).toBe(true);
         expect(res.body.length).toBeGreaterThanOrEqual(1);
         expect(res.body[0]).not.toHaveProperty('password');
       });
-  });
 
-  it('/auth/refresh (POST) deve renovar tokens', async () => {
-    const response = await request(app.getHttpServer())
+    await agent
+      .get('/auth/me')
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.email).toBe(
+          process.env.SEED_ADMIN_EMAIL ?? 'admin@limoflow.com',
+        );
+      });
+
+    await agent
       .post('/auth/refresh')
-      .send({ refreshToken })
-      .expect(200);
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.user.role).toBe('ADMIN');
+        expect(res.body.accessToken).toBeUndefined();
+      });
 
-    expect(response.body.accessToken).toBeDefined();
-    expect(response.body.refreshToken).toBeDefined();
-    refreshToken = response.body.refreshToken;
-  });
-
-  it('/auth/logout (POST) deve encerrar sessão', async () => {
-    await request(app.getHttpServer())
-      .post('/auth/logout')
-      .set('Authorization', `Bearer ${accessToken}`)
-      .send({ refreshToken })
-      .expect(204);
+    await agent.post('/auth/logout').expect(204);
+    await agent.get('/users').expect(401);
   });
 });

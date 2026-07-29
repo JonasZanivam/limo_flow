@@ -1,11 +1,17 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
-import { UserRole } from '@prisma/client';
+import type { Request } from 'express';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PrismaService } from '../../prisma/prisma.service';
+import { ACCESS_TOKEN_COOKIE } from '../auth-cookies';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { AuthenticatedUser } from '../../common/decorators/current-user.decorator';
+
+function getAccessTokenFromCookie(req: Request): string | null {
+  const token = req.cookies?.[ACCESS_TOKEN_COOKIE];
+  return typeof token === 'string' ? token : null;
+}
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
@@ -19,7 +25,10 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     }
 
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: ExtractJwt.fromExtractors([
+        getAccessTokenFromCookie,
+        ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ]),
       ignoreExpiration: false,
       secretOrKey: secret,
     });
@@ -38,7 +47,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     return {
       id: user.id,
       email: user.email,
-      role: user.role as UserRole,
+      role: user.role,
     };
   }
 }

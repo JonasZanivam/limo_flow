@@ -12,7 +12,7 @@ test.describe('API auth', () => {
     expect(body.service).toBe('limoflow-api');
   });
 
-  test('login admin deve retornar tokens', async ({ request }) => {
+  test('login admin deve definir cookies HttpOnly', async ({ request }) => {
     const response = await request.post(`${apiUrl}/auth/login`, {
       data: {
         email: process.env.SEED_ADMIN_EMAIL ?? 'admin@limoflow.com',
@@ -21,10 +21,16 @@ test.describe('API auth', () => {
     });
 
     expect(response.ok()).toBeTruthy();
+
     const body = await response.json();
-    expect(body.accessToken).toBeTruthy();
-    expect(body.refreshToken).toBeTruthy();
     expect(body.user.role).toBe('ADMIN');
+    expect(body.accessToken).toBeUndefined();
+    expect(body.refreshToken).toBeUndefined();
+
+    const setCookie = response.headers()['set-cookie'];
+    expect(setCookie?.join(';')).toContain('access_token=');
+    expect(setCookie?.join(';')).toContain('refresh_token=');
+    expect(setCookie?.join(';')).toContain('HttpOnly');
   });
 
   test('users deve exigir autenticação', async ({ request }) => {
