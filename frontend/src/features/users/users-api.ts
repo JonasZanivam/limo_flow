@@ -1,8 +1,11 @@
 import api from '@/lib/api';
+import type { PaginatedResponse, PaginationParams } from '@/types/pagination';
 import type { CreateUserInput, UpdateUserInput, User } from '@/types/user';
 
-export async function fetchUsers(): Promise<User[]> {
-  const { data } = await api.get<User[]>('/users');
+export async function fetchUsers(
+  params: PaginationParams,
+): Promise<PaginatedResponse<User>> {
+  const { data } = await api.get<PaginatedResponse<User>>('/users', { params });
   return data;
 }
 

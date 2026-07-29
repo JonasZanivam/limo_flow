@@ -1,75 +1,54 @@
-import { LogOut } from 'lucide-react';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { Menu } from 'lucide-react';
+import { useState } from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
+import { AppSidebar } from '@/components/layout/AppSidebar';
+import { getPageTitle } from '@/components/layout/nav-items';
 import { Button } from '@/components/ui/button';
-import { getNavItemsForRole } from './nav-items';
+import { Sheet, SheetContent } from '@/components/ui/sheet';
 import { useAuth } from '@/features/auth/use-auth';
-import { ROLE_LABELS } from '@/types/auth';
-import { cn } from '@/lib/utils';
 
 export function AppLayout() {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
+  const { user } = useAuth();
+  const location = useLocation();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   if (!user) return null;
 
-  const visibleNavItems = getNavItemsForRole(user.role);
+  const pageTitle = getPageTitle(location.pathname);
 
-  const handleLogout = async () => {
-    await logout();
-    navigate('/login', { replace: true });
-  };
+  const closeMobile = () => setMobileOpen(false);
 
   return (
     <div className="flex min-h-screen bg-background">
-      <aside className="hidden w-64 shrink-0 border-r border-sidebar-border bg-sidebar text-sidebar-foreground md:flex md:flex-col">
-        <div className="border-b border-sidebar-border px-6 py-5">
-          <p className="text-xs font-semibold tracking-[0.2em] text-primary uppercase">
-            LimoFlow
-          </p>
-          <p className="mt-1 text-sm text-sidebar-foreground/70">
-            CRM de limousine
-          </p>
-        </div>
-        <nav className="flex flex-1 flex-col gap-1 p-3">
-          {visibleNavItems.map((item) => (
-            <NavLink
-              key={item.href}
-              to={item.href}
-              end={item.href === '/'}
-              className={({ isActive }) =>
-                cn(
-                  'flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors',
-                  isActive
-                    ? 'bg-sidebar-accent text-primary'
-                    : 'text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground',
-                )
-              }
-            >
-              <item.icon className="size-4" />
-              {item.title}
-            </NavLink>
-          ))}
-        </nav>
+      <aside className="hidden w-64 shrink-0 border-r border-sidebar-border md:flex md:flex-col">
+        <AppSidebar />
       </aside>
 
+      <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+        <SheetContent showCloseButton className="p-0">
+          <AppSidebar onNavigate={closeMobile} />
+        </SheetContent>
+      </Sheet>
+
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex items-center justify-between border-b px-4 py-4 md:px-8">
-          <div>
-            <h1 className="text-lg font-semibold">LimoFlow</h1>
-            <p className="text-sm text-muted-foreground">
-              Bem-vindo, {user.name}
+        <header className="flex items-center gap-3 border-b px-4 py-4 md:px-8">
+          <Button
+            variant="outline"
+            size="icon-sm"
+            className="md:hidden"
+            onClick={() => setMobileOpen(true)}
+            aria-label="Abrir menu"
+          >
+            <Menu className="size-4" />
+          </Button>
+          <div className="min-w-0">
+            <h1 className="truncate text-lg font-semibold">{pageTitle}</h1>
+            <p className="truncate text-sm text-muted-foreground md:hidden">
+              {user.name}
             </p>
           </div>
-          <div className="flex items-center gap-3">
-            <span className="hidden rounded-full bg-primary/15 px-3 py-1 text-xs font-medium text-primary sm:inline">
-              {ROLE_LABELS[user.role]}
-            </span>
-            <Button variant="outline" size="sm" onClick={handleLogout}>
-              <LogOut className="size-4" />
-              Sair
-            </Button>
-          </div>
         </header>
+
         <main className="flex-1 p-4 md:p-8">
           <Outlet />
         </main>

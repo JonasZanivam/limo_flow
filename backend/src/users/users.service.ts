@@ -6,6 +6,11 @@ import {
 } from '@nestjs/common';
 import { Prisma, UserRole } from '@prisma/client';
 import { AuthService } from '../auth/auth.service';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
+import {
+  buildPaginatedResponse,
+  getPaginationParams,
+} from '../common/utils/pagination';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -26,11 +31,32 @@ export class UsersService {
     private readonly authService: AuthService,
   ) {}
 
-  findAll() {
-    return this.prisma.user.findMany({
-      select: userSelect,
-      orderBy: { createdAt: 'desc' },
-    });
+  findAll(query: PaginationQueryDto) {
+    const { page, limit, skip } = getPaginationParams(query.page, query.limit);
+    const where = this.buildSearchWhere(query.search);
+
+    return Promise.all([
+      this.prisma.user.findMany({
+        where,
+        select: userSelect,
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limit,
+      }),
+      this.prisma.user.count({ where }),
+    ]).then(([data, total]) => buildPaginatedResponse(data, total, page, limit));
+  }
+
+  private buildSearchWhere(search?: string): Prisma.UserWhereInput {
+    const term = search?.trim();
+    if (!term) return {};
+
+    return {
+      OR: [
+        { name: { contains: term, mode: 'insensitive' } },
+        { email: { contains: term, mode: 'insensitive' } },
+      ],
+    };
   }
 
   async findOne(id: string) {

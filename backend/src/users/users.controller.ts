@@ -8,9 +8,11 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { UserRole } from '@prisma/client';
 import { Roles } from '../common/decorators/auth.decorators';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import type { AuthenticatedUser } from '../common/decorators/current-user.decorator';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -23,8 +25,8 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  findAll(@Query() query: PaginationQueryDto) {
+    return this.usersService.findAll(query);
   }
 
   @Get(':id')
@@ -55,7 +57,9 @@ export class UsersController {
     if (target.role === UserRole.ADMIN) {
       const adminCount = await this.usersService.countAdmins();
       if (adminCount <= 1) {
-        throw new ForbiddenException('Não é possível remover o último administrador');
+        throw new ForbiddenException(
+          'Não é possível remover o último administrador',
+        );
       }
     }
 

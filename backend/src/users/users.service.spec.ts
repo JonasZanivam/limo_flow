@@ -58,15 +58,24 @@ describe('UsersService', () => {
     );
   });
 
-  it('deve listar usuários sem senha', async () => {
+  it('deve listar usuários paginados sem senha', async () => {
     prisma.user.findMany.mockResolvedValue([mockUser]);
+    prisma.user.count.mockResolvedValue(1);
 
-    const users = await service.findAll();
+    const result = await service.findAll({ page: 1, limit: 10 });
 
-    expect(users).toEqual([mockUser]);
+    expect(result.data).toEqual([mockUser]);
+    expect(result.meta).toEqual({
+      page: 1,
+      limit: 10,
+      total: 1,
+      totalPages: 1,
+    });
     expect(prisma.user.findMany).toHaveBeenCalledWith(
       expect.objectContaining({
         select: expect.not.objectContaining({ password: true }),
+        skip: 0,
+        take: 10,
       }),
     );
   });

@@ -3,6 +3,7 @@ import { GuestRoute } from '@/components/auth/GuestRoute';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { RoleRoute } from '@/components/auth/RoleRoute';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { ClientsPage } from '@/features/clients/ClientsPage';
 import { LoginPage } from '@/features/auth/LoginPage';
 import { DashboardPage } from '@/features/dashboard/DashboardPage';
 import { PlaceholderPage } from '@/features/PlaceholderPage';
@@ -30,15 +31,7 @@ export function AppRouter() {
             />
 
             <Route element={<RoleRoute roles={['ADMIN']} />}>
-              <Route
-                path="clientes"
-                element={
-                  <PlaceholderPage
-                    title="Clientes"
-                    description="CRUD de clientes com indicação e ações WhatsApp."
-                  />
-                }
-              />
+              <Route path="clientes" element={<ClientsPage />} />
               <Route
                 path="propostas"
                 element={

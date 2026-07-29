@@ -1,11 +1,18 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Pencil, Plus, Trash2 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
+import { DataTablePagination } from '@/components/ui/data-table-pagination';
+import { ListSearchInput } from '@/components/ui/list-search-input';
+import {
+  DEFAULT_PAGE_SIZE,
+  PaginatedTableFrame,
+  TABLE_ROW_HEIGHT_PX,
+} from '@/components/ui/paginated-table-frame';
 import { useAuth } from '@/features/auth/use-auth';
+import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { getApiErrorMessage } from '@/lib/api-error';
 import { ROLE_LABELS } from '@/types/auth';
 import type { User } from '@/types/user';
@@ -19,6 +26,7 @@ import {
 } from './users-api';
 
 const USERS_QUERY_KEY = ['users'] as const;
+const TABLE_COLUMNS = 5;
 
 const dateFormatter = new Intl.DateTimeFormat('pt-BR', {
   dateStyle: 'short',
@@ -32,16 +40,37 @@ function formatDate(value: string) {
 export function UsersPage() {
   const { user: currentUser } = useAuth();
   const queryClient = useQueryClient();
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState('');
+  const debouncedSearch = useDebouncedValue(search);
   const [formOpen, setFormOpen] = useState(false);
   const [formMode, setFormMode] = useState<'create' | 'edit'>('create');
   const [selectedUser, setSelectedUser] = useState<User | undefined>();
   const [userToDelete, setUserToDelete] = useState<User | undefined>();
   const [actionError, setActionError] = useState<string | null>(null);
 
-  const { data: users = [], isLoading, isError } = useQuery({
-    queryKey: USERS_QUERY_KEY,
-    queryFn: fetchUsers,
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch]);
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: [...USERS_QUERY_KEY, page, debouncedSearch],
+    queryFn: () =>
+      fetchUsers({
+        page,
+        limit: DEFAULT_PAGE_SIZE,
+        search: debouncedSearch || undefined,
+      }),
+    retry: 1,
   });
+
+  const users = data?.data ?? [];
+  const meta = data?.meta ?? {
+    page: 1,
+    limit: DEFAULT_PAGE_SIZE,
+    total: 0,
+    totalPages: 1,
+  };
 
   const createMutation = useMutation({
     mutationFn: createUser,
@@ -106,6 +135,10 @@ export function UsersPage() {
     await deleteMutation.mutateAsync(userToDelete.id);
   };
 
+  const emptyMessage = debouncedSearch
+    ? 'Nenhum usuário encontrado para a busca.'
+    : 'Nenhum usuário cadastrado.';
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -128,91 +161,97 @@ export function UsersPage() {
       )}
 
       <Card>
-        <CardHeader>
+        <CardHeader className="gap-4 sm:flex-row sm:items-center sm:justify-between">
           <CardTitle className="text-base">Equipe cadastrada</CardTitle>
+          <ListSearchInput
+            value={search}
+            onChange={setSearch}
+            placeholder="Buscar por nome ou e-mail..."
+          />
         </CardHeader>
         <CardContent className="p-0">
-          {isLoading ? (
-            <div className="space-y-3 p-6">
-              {Array.from({ length: 3 }).map((_, index) => (
-                <Skeleton key={index} className="h-10 w-full" />
-              ))}
-            </div>
-          ) : isError ? (
-            <p className="p-6 text-sm text-destructive">
-              Não foi possível carregar os usuários.
-            </p>
-          ) : users.length === 0 ? (
-            <p className="p-6 text-sm text-muted-foreground">
-              Nenhum usuário cadastrado.
-            </p>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b text-left text-muted-foreground">
-                    <th className="px-6 py-3 font-medium">Nome</th>
-                    <th className="px-6 py-3 font-medium">E-mail</th>
-                    <th className="px-6 py-3 font-medium">Perfil</th>
-                    <th className="hidden px-6 py-3 font-medium md:table-cell">
-                      Cadastro
-                    </th>
-                    <th className="px-6 py-3 text-right font-medium">Ações</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {users.map((user) => {
-                    const isSelf = user.id === currentUser?.id;
+          <PaginatedTableFrame
+            colSpan={TABLE_COLUMNS}
+            isLoading={isLoading}
+            isError={isError}
+            errorMessage="Não foi possível carregar os usuários."
+            isEmpty={!isLoading && !isError && users.length === 0}
+            emptyMessage={emptyMessage}
+            rowCount={users.length}
+            header={
+              <thead>
+                <tr className="border-b text-left text-muted-foreground">
+                  <th className="px-6 py-3 font-medium">Nome</th>
+                  <th className="px-6 py-3 font-medium">E-mail</th>
+                  <th className="px-6 py-3 font-medium">Perfil</th>
+                  <th className="hidden px-6 py-3 font-medium md:table-cell">
+                    Cadastro
+                  </th>
+                  <th className="px-6 py-3 text-right font-medium">Ações</th>
+                </tr>
+              </thead>
+            }
+            footer={
+              <DataTablePagination
+                page={meta.page}
+                total={meta.total}
+                totalPages={meta.totalPages}
+                onPageChange={setPage}
+                disabled={isLoading}
+              />
+            }
+          >
+            {users.map((user) => {
+              const isSelf = user.id === currentUser?.id;
 
-                    return (
-                      <tr key={user.id} className="border-b last:border-0">
-                        <td className="px-6 py-4 font-medium">
-                          {user.name}
-                          {isSelf && (
-                            <span className="ml-2 text-xs text-muted-foreground">
-                              (você)
-                            </span>
-                          )}
-                        </td>
-                        <td className="px-6 py-4 text-muted-foreground">
-                          {user.email}
-                        </td>
-                        <td className="px-6 py-4">
-                          <span className="rounded-full bg-primary/15 px-2.5 py-1 text-xs font-medium text-primary">
-                            {ROLE_LABELS[user.role]}
-                          </span>
-                        </td>
-                        <td className="hidden px-6 py-4 text-muted-foreground md:table-cell">
-                          {formatDate(user.createdAt)}
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="flex justify-end gap-2">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => openEdit(user)}
-                            >
-                              <Pencil />
-                              Editar
-                            </Button>
-                            <Button
-                              variant="destructive"
-                              size="sm"
-                              disabled={isSelf || deleteMutation.isPending}
-                              onClick={() => setUserToDelete(user)}
-                            >
-                              <Trash2 />
-                              Excluir
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          )}
+              return (
+                <tr
+                  key={user.id}
+                  className="border-b last:border-0"
+                  style={{ height: TABLE_ROW_HEIGHT_PX }}
+                >
+                  <td className="px-6 py-4 font-medium">
+                    {user.name}
+                    {isSelf && (
+                      <span className="ml-2 text-xs text-muted-foreground">
+                        (você)
+                      </span>
+                    )}
+                  </td>
+                  <td className="px-6 py-4 text-muted-foreground">{user.email}</td>
+                  <td className="px-6 py-4">
+                    <span className="rounded-full bg-primary/15 px-2.5 py-1 text-xs font-medium text-primary">
+                      {ROLE_LABELS[user.role]}
+                    </span>
+                  </td>
+                  <td className="hidden px-6 py-4 text-muted-foreground md:table-cell">
+                    {formatDate(user.createdAt)}
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex justify-end gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => openEdit(user)}
+                      >
+                        <Pencil />
+                        Editar
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        disabled={isSelf || deleteMutation.isPending}
+                        onClick={() => setUserToDelete(user)}
+                      >
+                        <Trash2 />
+                        Excluir
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+          </PaginatedTableFrame>
         </CardContent>
       </Card>
 

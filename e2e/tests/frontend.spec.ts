@@ -8,7 +8,7 @@ async function loginAsAdmin(page: import('@playwright/test').Page) {
   await page.getByLabel('E-mail').fill(adminEmail);
   await page.getByLabel('Senha').fill(adminPassword);
   await page.getByRole('button', { name: 'Entrar' }).click();
-  await expect(page.getByText('Bem-vindo,')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
 }
 
 test.describe('Frontend smoke', () => {
@@ -30,9 +30,11 @@ test.describe('Frontend smoke', () => {
     await loginAsAdmin(page);
     await page.goto('/clientes');
 
-    await expect(page.getByText('Clientes').first()).toBeVisible();
     await expect(
-      page.getByText('CRUD de clientes com indicação e ações WhatsApp.'),
+      page.getByRole('heading', { name: 'Clientes' }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: 'Novo cliente' }),
     ).toBeVisible();
   });
 
