@@ -3,6 +3,7 @@ import { GuestRoute } from '@/components/auth/GuestRoute';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { RoleRoute } from '@/components/auth/RoleRoute';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { AgendaPage } from '@/features/agenda/AgendaPage';
 import { ClientsPage } from '@/features/clients/ClientsPage';
 import { LoginPage } from '@/features/auth/LoginPage';
 import { DashboardPage } from '@/features/dashboard/DashboardPage';
@@ -21,15 +22,7 @@ export function AppRouter() {
         <Route element={<ProtectedRoute />}>
           <Route element={<AppLayout />}>
             <Route index element={<DashboardPage />} />
-            <Route
-              path="agenda"
-              element={
-                <PlaceholderPage
-                  title="Agenda"
-                  description="Calendário FullCalendar será implementado na próxima etapa."
-                />
-              }
-            />
+            <Route path="agenda" element={<AgendaPage />} />
 
             <Route element={<RoleRoute roles={['ADMIN']} />}>
               <Route path="clientes" element={<ClientsPage />} />

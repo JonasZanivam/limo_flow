@@ -65,4 +65,16 @@ test.describe('Frontend smoke', () => {
       page.getByRole('button', { name: 'Novo veículo' }),
     ).toBeVisible();
   });
+
+  test('deve exibir a agenda com calendário', async ({ page }) => {
+    await loginAsAdmin(page);
+    await page.goto('/agenda');
+
+    await expect(page.getByRole('heading', { name: 'Agenda' })).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: 'Novo evento' }),
+    ).toBeVisible();
+    await expect(page.locator('.fc')).toBeVisible();
+    await expect(page.getByText('Confirmado')).toBeVisible();
+  });
 });

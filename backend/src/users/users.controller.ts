@@ -29,6 +29,11 @@ export class UsersController {
     return this.usersService.findAll(query);
   }
 
+  @Get('drivers')
+  findDrivers() {
+    return this.usersService.findDrivers();
+  }
+
   @Get(':id')
   findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.usersService.findOne(id);

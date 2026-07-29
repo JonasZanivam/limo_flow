@@ -31,6 +31,18 @@ export class UsersService {
     private readonly authService: AuthService,
   ) {}
 
+  findDrivers() {
+    return this.prisma.user.findMany({
+      where: { role: UserRole.DRIVER },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+      },
+      orderBy: { name: 'asc' },
+    });
+  }
+
   findAll(query: PaginationQueryDto) {
     const { page, limit, skip } = getPaginationParams(query.page, query.limit);
     const where = this.buildSearchWhere(query.search);

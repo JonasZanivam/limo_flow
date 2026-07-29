@@ -32,6 +32,18 @@ const vehicleSelect = {
 export class VehiclesService {
   constructor(private readonly prisma: PrismaService) {}
 
+  findOptions() {
+    return this.prisma.vehicle.findMany({
+      select: {
+        id: true,
+        plate: true,
+        model: true,
+        capacity: true,
+      },
+      orderBy: { model: 'asc' },
+    });
+  }
+
   findAll(query: PaginationQueryDto) {
     const { page, limit, skip } = getPaginationParams(query.page, query.limit);
     const where = this.buildSearchWhere(query.search);
