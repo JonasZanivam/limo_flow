@@ -29,8 +29,7 @@ export class UpdateUserDto {
   @MinLength(8)
   @MaxLength(128)
   @Matches(PASSWORD_REGEX, {
-    message:
-      'Senha deve ter maiúscula, minúscula, número e caractere especial',
+    message: 'Senha deve ter maiúscula, minúscula, número e caractere especial',
   })
   password?: string;
 

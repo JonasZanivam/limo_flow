@@ -48,7 +48,9 @@ function createTeeStream(): Writable {
               getRequestId(req.headers['x-request-id']),
             customProps: (req: IncomingMessage & { id?: string }) => ({
               requestId: req.id,
-              service: configService.get<string>('OTEL_SERVICE_NAME') ?? 'limoflow-api',
+              service:
+                configService.get<string>('OTEL_SERVICE_NAME') ??
+                'limoflow-api',
             }),
             stream: logToFile ? createTeeStream() : undefined,
             transport:

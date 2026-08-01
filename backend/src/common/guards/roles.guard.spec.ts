@@ -33,7 +33,11 @@ describe('RolesGuard', () => {
 
     expect(
       guard.canActivate(
-        createContext({ role: UserRole.ADMIN, id: '1', email: 'a@b.com' } as never),
+        createContext({
+          role: UserRole.ADMIN,
+          id: '1',
+          email: 'a@b.com',
+        } as never),
       ),
     ).toBe(true);
   });
@@ -43,7 +47,11 @@ describe('RolesGuard', () => {
 
     expect(() =>
       guard.canActivate(
-        createContext({ role: UserRole.DRIVER, id: '1', email: 'a@b.com' } as never),
+        createContext({
+          role: UserRole.DRIVER,
+          id: '1',
+          email: 'a@b.com',
+        } as never),
       ),
     ).toThrow(ForbiddenException);
   });
