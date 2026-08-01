@@ -114,7 +114,7 @@ export function PaymentFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-h-[90vh] max-w-xl overflow-y-auto sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle>
             {isEdit ? 'Editar pagamento' : 'Novo pagamento'}
@@ -124,12 +124,8 @@ export function PaymentFormDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={submit} className="space-y-4">
-          {errors.root && (
-            <p className="text-sm text-destructive">{errors.root.message}</p>
-          )}
-
-          <div className="space-y-1.5">
+        <form onSubmit={submit} className="flex flex-col gap-5 px-6">
+          <div className="space-y-2">
             <label className="text-sm font-medium">Cliente</label>
             <select
               {...register('clientId')}
@@ -144,20 +140,20 @@ export function PaymentFormDialog({
               ))}
             </select>
             {errors.clientId && (
-              <p className="text-xs text-destructive">{errors.clientId.message}</p>
+              <p className="text-sm text-destructive">{errors.clientId.message}</p>
             )}
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-1.5">
+          <div className="grid gap-5 sm:grid-cols-2">
+            <div className="space-y-2">
               <label className="text-sm font-medium">Valor (R$)</label>
               <Input type="number" step="0.01" {...register('amount')} />
               {errors.amount && (
-                <p className="text-xs text-destructive">{errors.amount.message}</p>
+                <p className="text-sm text-destructive">{errors.amount.message}</p>
               )}
             </div>
 
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <label className="text-sm font-medium">Tipo</label>
               <select {...register('type')} className={selectClassName}>
                 {Object.entries(PAYMENT_TYPE_LABELS).map(([value, label]) => (
@@ -169,8 +165,8 @@ export function PaymentFormDialog({
             </div>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-1.5">
+          <div className="grid gap-5 sm:grid-cols-2">
+            <div className="space-y-2">
               <label className="text-sm font-medium">Status</label>
               <select {...register('status')} className={selectClassName}>
                 {Object.entries(PAYMENT_STATUS_LABELS).map(([value, label]) => (
@@ -181,7 +177,7 @@ export function PaymentFormDialog({
               </select>
             </div>
 
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <label className="text-sm font-medium">Forma</label>
               <select {...register('method')} className={selectClassName}>
                 <option value="">Não informada</option>
@@ -194,21 +190,27 @@ export function PaymentFormDialog({
             </div>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-1.5">
+          <div className="grid gap-5 sm:grid-cols-2">
+            <div className="space-y-2">
               <label className="text-sm font-medium">Vencimento</label>
               <Input type="date" {...register('dueDate')} />
             </div>
 
             {status === 'PAID' && (
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 <label className="text-sm font-medium">Pago em</label>
                 <Input type="date" {...register('paidAt')} />
               </div>
             )}
           </div>
 
-          <DialogFooter>
+          {errors.root && (
+            <p className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+              {errors.root.message}
+            </p>
+          )}
+
+          <DialogFooter className="px-0 pb-6 sm:flex-row sm:justify-end">
             <Button
               type="button"
               variant="outline"

@@ -92,7 +92,7 @@ export function UserFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-h-[90vh] max-w-xl overflow-y-auto sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>
             {isEdit ? 'Editar usuário' : 'Novo usuário'}
@@ -104,7 +104,7 @@ export function UserFormDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(submit)} className="flex flex-col gap-4 px-6">
+        <form onSubmit={handleSubmit(submit)} className="flex flex-col gap-5 px-6">
           <div className="space-y-2">
             <label htmlFor="user-name" className="text-sm font-medium">
               Nome
@@ -179,7 +179,7 @@ export function UserFormDialog({
             </p>
           )}
 
-          <DialogFooter className="px-0 pb-6">
+          <DialogFooter className="px-0 pb-6 sm:flex-row sm:justify-end">
             <Button
               type="button"
               variant="outline"

@@ -110,7 +110,7 @@ export function ProposalFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-h-[90vh] max-w-xl overflow-y-auto sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle>
             {isEdit ? 'Editar proposta' : 'Nova proposta'}
@@ -120,13 +120,9 @@ export function ProposalFormDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={submit} className="space-y-4">
-          {errors.root && (
-            <p className="text-sm text-destructive">{errors.root.message}</p>
-          )}
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-1.5">
+        <form onSubmit={submit} className="flex flex-col gap-5 px-6">
+          <div className="grid gap-5 sm:grid-cols-2">
+            <div className="space-y-2">
               <label className="text-sm font-medium">Cliente</label>
               <select
                 {...register('clientId')}
@@ -145,7 +141,7 @@ export function ProposalFormDialog({
               )}
             </div>
 
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <label className="text-sm font-medium">Veículo</label>
               <select
                 {...register('vehicleId')}
@@ -162,30 +158,30 @@ export function ProposalFormDialog({
             </div>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-3">
-            <div className="space-y-1.5">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="space-y-2">
               <label className="text-sm font-medium">Valor (R$)</label>
               <Input type="number" step="0.01" {...register('value')} />
               {errors.value && (
-                <p className="text-xs text-destructive">{errors.value.message}</p>
+                <p className="text-sm text-destructive">{errors.value.message}</p>
               )}
             </div>
 
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <label className="text-sm font-medium">Horas</label>
               <Input type="number" {...register('hours')} />
               {errors.hours && (
-                <p className="text-xs text-destructive">{errors.hours.message}</p>
+                <p className="text-sm text-destructive">{errors.hours.message}</p>
               )}
             </div>
 
-            <div className="space-y-1.5">
+            <div className="space-y-2 sm:col-span-2 lg:col-span-1">
               <label className="text-sm font-medium">Km</label>
-              <Input type="number" step="0.1" {...register('mileage')} />
+              <Input type="number" step="0.1" placeholder="Opcional" {...register('mileage')} />
             </div>
           </div>
 
-          <div className="space-y-1.5">
+          <div className="space-y-2">
             <label className="text-sm font-medium">Status</label>
             <select
               {...register('status')}
@@ -200,7 +196,13 @@ export function ProposalFormDialog({
             </select>
           </div>
 
-          <DialogFooter>
+          {errors.root && (
+            <p className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+              {errors.root.message}
+            </p>
+          )}
+
+          <DialogFooter className="px-0 pb-6 sm:flex-row sm:justify-end">
             <Button
               type="button"
               variant="outline"

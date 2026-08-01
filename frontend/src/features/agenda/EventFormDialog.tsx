@@ -155,7 +155,7 @@ export function EventFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
+      <DialogContent className="max-h-[90vh] max-w-xl overflow-y-auto sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle>
             {isEdit ? 'Editar evento' : 'Novo evento'}
@@ -167,30 +167,30 @@ export function EventFormDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={submitHandler} className="space-y-4">
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-1.5">
+        <form onSubmit={submitHandler} className="flex flex-col gap-5 px-6">
+          <div className="grid gap-5 sm:grid-cols-2">
+            <div className="space-y-2">
               <label htmlFor="startAt" className="text-sm font-medium">
                 Início
               </label>
               <Input id="startAt" type="datetime-local" {...register('startAt')} />
               {errors.startAt && (
-                <p className="text-xs text-destructive">{errors.startAt.message}</p>
+                <p className="text-sm text-destructive">{errors.startAt.message}</p>
               )}
             </div>
 
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <label htmlFor="endAt" className="text-sm font-medium">
                 Término
               </label>
               <Input id="endAt" type="datetime-local" {...register('endAt')} />
               {errors.endAt && (
-                <p className="text-xs text-destructive">{errors.endAt.message}</p>
+                <p className="text-sm text-destructive">{errors.endAt.message}</p>
               )}
             </div>
           </div>
 
-          <div className="space-y-1.5">
+          <div className="space-y-2">
             <label htmlFor="status" className="text-sm font-medium">
               Status
             </label>
@@ -203,7 +203,7 @@ export function EventFormDialog({
             </select>
           </div>
 
-          <div className="space-y-1.5">
+          <div className="space-y-2">
             <label htmlFor="clientId" className="text-sm font-medium">
               Cliente
             </label>
@@ -216,12 +216,12 @@ export function EventFormDialog({
               ))}
             </select>
             {errors.clientId && (
-              <p className="text-xs text-destructive">{errors.clientId.message}</p>
+              <p className="text-sm text-destructive">{errors.clientId.message}</p>
             )}
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-1.5">
+          <div className="grid gap-5 sm:grid-cols-2">
+            <div className="space-y-2">
               <label htmlFor="vehicleId" className="text-sm font-medium">
                 Veículo
               </label>
@@ -239,7 +239,7 @@ export function EventFormDialog({
               </select>
             </div>
 
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <label htmlFor="driverId" className="text-sm font-medium">
                 Motorista
               </label>
@@ -258,15 +258,15 @@ export function EventFormDialog({
             </div>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-1.5">
+          <div className="grid gap-5 sm:grid-cols-2">
+            <div className="space-y-2">
               <label htmlFor="church" className="text-sm font-medium">
                 Igreja
               </label>
               <Input id="church" {...register('church')} />
             </div>
 
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <label htmlFor="venue" className="text-sm font-medium">
                 Recepção
               </label>
@@ -279,10 +279,12 @@ export function EventFormDialog({
           )}
 
           {errors.root && (
-            <p className="text-sm text-destructive">{errors.root.message}</p>
+            <p className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+              {errors.root.message}
+            </p>
           )}
 
-          <DialogFooter className="gap-2 sm:justify-between">
+          <DialogFooter className="gap-2 px-0 pb-6 sm:flex-row sm:justify-between">
             {isEdit && onDelete ? (
               <Button
                 type="button"

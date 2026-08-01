@@ -82,7 +82,7 @@ export function VehicleFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-h-[90vh] max-w-xl overflow-y-auto sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>
             {isEdit ? 'Editar veículo' : 'Novo veículo'}
@@ -94,7 +94,7 @@ export function VehicleFormDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(submit)} className="flex flex-col gap-4 px-6">
+        <form onSubmit={handleSubmit(submit)} className="flex flex-col gap-5 px-6">
           <div className="space-y-2">
             <label htmlFor="vehicle-plate" className="text-sm font-medium">
               Placa
@@ -150,7 +150,7 @@ export function VehicleFormDialog({
             </p>
           )}
 
-          <DialogFooter className="px-0 pb-6">
+          <DialogFooter className="px-0 pb-6 sm:flex-row sm:justify-end">
             <Button
               type="button"
               variant="outline"

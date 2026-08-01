@@ -122,7 +122,7 @@ export function ClientFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[90vh] max-w-lg overflow-y-auto">
+      <DialogContent className="max-h-[90vh] max-w-xl overflow-y-auto sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle>
             {isEdit ? 'Editar cliente' : 'Novo cliente'}
@@ -134,8 +134,8 @@ export function ClientFormDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(submit)} className="flex flex-col gap-4 px-6">
-          <div className="grid gap-4 sm:grid-cols-2">
+        <form onSubmit={handleSubmit(submit)} className="flex flex-col gap-5 px-6">
+          <div className="grid gap-5 sm:grid-cols-2">
             <div className="space-y-2">
               <label htmlFor="client-bride" className="text-sm font-medium">
                 Noiva
@@ -187,7 +187,7 @@ export function ClientFormDialog({
             )}
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-5 sm:grid-cols-2">
             <div className="space-y-2">
               <label htmlFor="client-email" className="text-sm font-medium">
                 E-mail
@@ -221,7 +221,7 @@ export function ClientFormDialog({
             </div>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-5 sm:grid-cols-2">
             <div className="space-y-2">
               <label htmlFor="client-church" className="text-sm font-medium">
                 Igreja
@@ -272,7 +272,7 @@ export function ClientFormDialog({
             </p>
           )}
 
-          <DialogFooter className="px-0 pb-6">
+          <DialogFooter className="px-0 pb-6 sm:flex-row sm:justify-end">
             <Button
               type="button"
               variant="outline"
