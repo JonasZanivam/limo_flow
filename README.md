@@ -134,8 +134,8 @@ limo_flow/
 
 ## Branches
 
-- `develop` — desenvolvimento ativo
-- `master` — estável (PRs quando features estiverem prontas)
+- `develop` — desenvolvimento ativo (CI roda aqui; **sem deploy**)
+- `master` — produção estável (CI + **deploy automático na VPS**)
 
 ## Roadmap
 

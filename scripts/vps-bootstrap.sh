@@ -8,7 +8,7 @@ set -euo pipefail
 
 APP_DIR="${APP_DIR:-/opt/limoflow}"
 REPO_URL="${REPO_URL:-https://github.com/JonasZanivam/limo_flow.git}"
-BRANCH="${BRANCH:-develop}"
+BRANCH="${BRANCH:-master}"
 
 echo "==> Instalando Docker..."
 if ! command -v docker >/dev/null 2>&1; then

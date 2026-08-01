@@ -118,9 +118,9 @@ usermod -aG docker deploy
 
 ## 6. Fluxo de deploy automático
 
-1. Push em `develop`
-2. **CI** roda testes e valida build Docker
-3. **Deploy VPS** conecta via SSH, faz `git pull` e `docker compose up -d --build`
+1. Merge em **`master`** (produção)
+2. **CI** valida testes e build Docker
+3. **Deploy VPS** conecta via SSH, faz `git pull origin master` e `docker compose up -d --build`
 
 Deploy manual: **Actions → Deploy VPS → Run workflow**
 
