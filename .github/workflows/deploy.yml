@@ -27,7 +27,7 @@ jobs:
             cd "${{ secrets.VPS_APP_PATH }}"
             git fetch origin master
             git checkout master
-            git pull origin master
+            git reset --hard origin/master
             docker compose -f docker-compose.prod.yml --env-file .env build
             docker compose -f docker-compose.prod.yml --env-file .env up -d
             docker compose -f docker-compose.prod.yml ps
