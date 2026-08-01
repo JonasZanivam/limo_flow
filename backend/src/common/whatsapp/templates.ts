@@ -3,12 +3,6 @@ export const WHATSAPP_TEMPLATES = {
     'Olá {{noiva}} e {{noivo}}! Segue nossa proposta para o casamento em {{data}}. Valor: R$ {{valor}}.',
   CONTRACT:
     'Olá {{noiva}} e {{noivo}}! Segue o contrato do serviço de limousine para {{data}}.',
-  LOCATION:
-    'Olá! Segue a localização do evento: Igreja {{igreja}} | Salão {{salao}}.',
-  REMINDER:
-    'Lembrete: seu casamento é em {{data}}. Estamos ansiosos para atendê-los!',
-  RECEIPT:
-    'Olá! Confirmamos o recebimento do pagamento de R$ {{valor}} referente ao seu evento.',
 } as const;
 
 export type WhatsAppTemplateType = keyof typeof WHATSAPP_TEMPLATES;
