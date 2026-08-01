@@ -18,7 +18,6 @@ import { PaymentsModule } from './payments/payments.module';
 import { VehiclesModule } from './vehicles/vehicles.module';
 import { ChecklistsModule } from './checklists/checklists.module';
 import { DashboardModule } from './dashboard/dashboard.module';
-import { WhatsappModule } from './whatsapp/whatsapp.module';
 import { PdfModule } from './pdf/pdf.module';
 
 @Module({
@@ -45,7 +44,6 @@ import { PdfModule } from './pdf/pdf.module';
     VehiclesModule,
     ChecklistsModule,
     DashboardModule,
-    WhatsappModule,
     PdfModule,
   ],
   controllers: [AppController],

@@ -15,7 +15,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import {
   buildWhatsAppUrl,
   renderTemplate,
-} from '../whatsapp/templates';
+} from '../common/whatsapp/templates';
 import { buildContractContent } from './contract-template';
 import { CreateContractDto } from './dto/create-contract.dto';
 
