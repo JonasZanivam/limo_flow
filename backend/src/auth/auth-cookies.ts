@@ -36,6 +36,15 @@ function cookieBaseOptions() {
   };
 }
 
+function getAuthCookiePaths() {
+  const prefix = process.env.COOKIE_PATH_PREFIX ?? '';
+
+  return {
+    access: prefix || '/',
+    refresh: prefix ? `${prefix}/auth` : '/auth',
+  };
+}
+
 export function setAuthCookies(
   res: Response,
   tokens: AuthCookieTokens,
@@ -45,25 +54,27 @@ export function setAuthCookies(
   const refreshExpiresIn =
     configService.get<string>('JWT_REFRESH_EXPIRES_IN') ?? '7d';
   const base = cookieBaseOptions();
+  const paths = getAuthCookiePaths();
 
   res.cookie(ACCESS_TOKEN_COOKIE, tokens.accessToken, {
     ...base,
     maxAge: parseDurationMs(accessExpiresIn),
-    path: '/',
+    path: paths.access,
   });
 
   res.cookie(REFRESH_TOKEN_COOKIE, tokens.refreshToken, {
     ...base,
     maxAge: parseDurationMs(refreshExpiresIn),
-    path: '/auth',
+    path: paths.refresh,
   });
 }
 
 export function clearAuthCookies(res: Response): void {
   const base = cookieBaseOptions();
+  const paths = getAuthCookiePaths();
 
-  res.clearCookie(ACCESS_TOKEN_COOKIE, { ...base, path: '/' });
-  res.clearCookie(REFRESH_TOKEN_COOKIE, { ...base, path: '/auth' });
+  res.clearCookie(ACCESS_TOKEN_COOKIE, { ...base, path: paths.access });
+  res.clearCookie(REFRESH_TOKEN_COOKIE, { ...base, path: paths.refresh });
 }
 
 export function getRefreshTokenFromRequest(
