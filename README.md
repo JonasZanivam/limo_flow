@@ -130,11 +130,11 @@ Ver issues do repositório para o roadmap completo.
 
 - [x] Scaffold monorepo
 - [x] Auth JWT + roles (backend)
-- [ ] Auth frontend (login + rotas protegidas)
-- [ ] Clientes e Veículos
-- [ ] Agenda
-- [ ] Propostas e Contratos
-- [ ] Financeiro
+- [x] Auth frontend (login + rotas protegidas)
+- [x] Clientes e Veículos
+- [x] Agenda
+- [x] Propostas e Contratos
+- [x] Financeiro
 - [ ] Checklist
-- [ ] Dashboard
-- [ ] WhatsApp wa.me
+- [x] Dashboard
+- [x] WhatsApp wa.me
