@@ -192,3 +192,21 @@ model VehiclePhoto {
   path      String
   createdAt DateTime @default(now())
 }
+
+model CompanySettings {
+  id           String   @id @default("default")
+  legalName    String
+  tradeName    String?
+  cnpj         String
+  street       String
+  number       String
+  complement   String?
+  neighborhood String
+  city         String
+  state        String   @db.Char(2)
+  zipCode      String
+  phone        String?
+  email        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}

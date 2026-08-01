@@ -9,6 +9,7 @@ import { ContractsPage } from '@/features/contracts/ContractsPage';
 import { LoginPage } from '@/features/auth/LoginPage';
 import { DashboardPage } from '@/features/dashboard/DashboardPage';
 import { PaymentsPage } from '@/features/payments/PaymentsPage';
+import { ParametersPage } from '@/features/parameters/ParametersPage';
 import { ProposalsPage } from '@/features/proposals/ProposalsPage';
 import { UsersPage } from '@/features/users/UsersPage';
 import { VehiclesPage } from '@/features/vehicles/VehiclesPage';
@@ -33,6 +34,7 @@ export function AppRouter() {
               <Route path="financeiro" element={<PaymentsPage />} />
               <Route path="veiculos" element={<VehiclesPage />} />
               <Route path="usuarios" element={<UsersPage />} />
+              <Route path="parametros" element={<ParametersPage />} />
             </Route>
 
             <Route path="*" element={<Navigate to="/" replace />} />

@@ -19,6 +19,7 @@ import { VehiclesModule } from './vehicles/vehicles.module';
 import { ChecklistsModule } from './checklists/checklists.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { PdfModule } from './pdf/pdf.module';
+import { CompanySettingsModule } from './company-settings/company-settings.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { PdfModule } from './pdf/pdf.module';
     ChecklistsModule,
     DashboardModule,
     PdfModule,
+    CompanySettingsModule,
   ],
   controllers: [AppController],
   providers: [

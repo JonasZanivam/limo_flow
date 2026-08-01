@@ -10,13 +10,21 @@ import {
   buildPaginatedResponse,
   getPaginationParams,
 } from '../common/utils/pagination';
+import {
+  formatCnpj,
+  formatCompanyAddress,
+} from '../company-settings/company-settings.utils';
+import { CompanySettingsService } from '../company-settings/company-settings.service';
 import { PdfService } from '../pdf/pdf.service';
 import { PrismaService } from '../prisma/prisma.service';
 import {
   buildWhatsAppUrl,
   renderTemplate,
 } from '../common/whatsapp/templates';
-import { buildContractContent } from './contract-template';
+import {
+  buildContractContent,
+  getContractBodyForPdf,
+} from './contract-template';
 import { CreateContractDto } from './dto/create-contract.dto';
 
 const contractSelect = {
@@ -63,6 +71,7 @@ export class ContractsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly pdfService: PdfService,
+    private readonly companySettingsService: CompanySettingsService,
   ) {}
 
   findAll(query: PaginationQueryDto) {
@@ -143,6 +152,8 @@ export class ContractsService {
       );
     }
 
+    const company = await this.companySettingsService.get();
+
     const content = buildContractContent({
       brideName: proposal.client.brideName,
       groomName: proposal.client.groomName,
@@ -156,6 +167,10 @@ export class ContractsService {
         : 'A definir',
       church: proposal.client.church ?? 'A definir',
       venue: proposal.client.venue ?? 'A definir',
+      companyLegalName: company.legalName,
+      companyCnpj: formatCnpj(company.cnpj),
+      companyAddress: formatCompanyAddress(company),
+      companyCity: company.city,
     });
 
     const contract = await this.prisma.contract.create({
@@ -202,10 +217,13 @@ export class ContractsService {
 
   async generatePdf(id: string) {
     const contract = await this.findOne(id);
+    const company = await this.companySettingsService.get();
+    const title = `Contrato — ${company.tradeName ?? company.legalName}`;
 
-    return this.pdfService.generateDocument('Contrato — LimoFlow', [
-      { text: contract.content, options: { align: 'left' } },
-    ]);
+    return this.pdfService.generateContractPdf(
+      title,
+      getContractBodyForPdf(contract.content),
+    );
   }
 
   private serializeContract(

@@ -107,6 +107,26 @@ async function main() {
     });
   }
 
+  await prisma.companySettings.upsert({
+    where: { id: 'default' },
+    update: {},
+    create: {
+      id: 'default',
+      legalName: 'LimoFlow Serviços de Limousine Ltda.',
+      tradeName: 'LimoFlow',
+      cnpj: '12345678000199',
+      street: 'Rua das Flores',
+      number: '100',
+      complement: 'Sala 2',
+      neighborhood: 'Centro',
+      city: 'São Paulo',
+      state: 'SP',
+      zipCode: '01001000',
+      phone: '1133334444',
+      email: 'contato@limoflow.com',
+    },
+  });
+
   const demoProposal = await prisma.proposal.upsert({
     where: { id: '00000000-0000-4000-8000-000000000201' },
     update: {},
@@ -176,7 +196,7 @@ async function main() {
   });
 
   console.log(
-    'Seed concluído: usuários, veículos, cliente, evento, checklist, propostas, contrato e pagamentos demo.',
+    'Seed concluído: usuários, veículos, parâmetros da empresa, cliente, evento, checklist, propostas, contrato e pagamentos demo.',
   );
 }
 

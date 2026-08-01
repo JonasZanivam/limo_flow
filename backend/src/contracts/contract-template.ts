@@ -7,6 +7,10 @@ type ContractTemplateVars = {
   vehicle: string;
   church: string;
   venue: string;
+  companyLegalName: string;
+  companyCnpj: string;
+  companyAddress: string;
+  companyCity: string;
 };
 
 export function buildContractContent(vars: ContractTemplateVars): string {
@@ -16,7 +20,9 @@ CONTRATANTE: ${vars.brideName} e ${vars.groomName}
 DATA DO EVENTO: ${vars.weddingDate}
 LOCAL: Igreja ${vars.church} | Salão ${vars.venue}
 
-CONTRATADA: LimoFlow Serviços de Limousine Ltda.
+CONTRATADA: ${vars.companyLegalName}
+CNPJ: ${vars.companyCnpj}
+ENDEREÇO: ${vars.companyAddress}
 
 CLÁUSULA 1 — DO OBJETO
 A CONTRATADA se compromete a prestar serviço de transporte em limousine para o casamento dos CONTRATANTES, com duração de ${vars.hours} hora(s), utilizando o veículo ${vars.vehicle}.
@@ -28,10 +34,18 @@ CLÁUSULA 3 — DAS OBRIGAÇÕES
 A CONTRATADA disponibilizará motorista habilitado, veículo limpo e decorado conforme combinado. Os CONTRATANTES devem informar horários e locais com antecedência.
 
 CLÁUSULA 4 — DO FORO
-Fica eleito o foro da comarca da sede da CONTRATADA para dirimir quaisquer dúvidas oriundas deste contrato.
+Fica eleito o foro da comarca de ${vars.companyCity} para dirimir quaisquer dúvidas oriundas deste contrato.
 
-Por estarem de acordo, firmam o presente contrato.
+Por estarem de acordo, firmam o presente contrato.`;
+}
 
-___________________________          ___________________________
-CONTRATANTE                          CONTRATADA`;
+export function getContractBodyForPdf(content: string): string {
+  const marker = 'Por estarem de acordo, firmam o presente contrato.';
+  const markerIndex = content.indexOf(marker);
+
+  if (markerIndex === -1) {
+    return content.trimEnd();
+  }
+
+  return content.slice(0, markerIndex).trimEnd();
 }
