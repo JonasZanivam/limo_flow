@@ -141,6 +141,34 @@ async function main() {
     },
   });
 
+  await prisma.proposalTramite.deleteMany({
+    where: { proposalId: demoProposal.id },
+  });
+  await prisma.proposalTramite.createMany({
+    data: [
+      {
+        proposalId: demoProposal.id,
+        type: 'GENERATED',
+        description: 'Proposta criada no sistema.',
+      },
+      {
+        proposalId: demoProposal.id,
+        type: 'SENT',
+        description: 'Proposta enviada ao casal por WhatsApp.',
+      },
+      {
+        proposalId: demoProposal.id,
+        type: 'ACCEPTED',
+        description: 'Casal confirmou o orçamento.',
+      },
+      {
+        proposalId: demoProposal.id,
+        type: 'CONTRACT_CREATED',
+        description: 'Contrato gerado a partir da proposta aceita.',
+      },
+    ],
+  });
+
   await prisma.contract.upsert({
     where: { id: '00000000-0000-4000-8000-000000000301' },
     update: {},
@@ -164,6 +192,29 @@ async function main() {
       clientId: demoClient.id,
       vehicleId: sprinter?.id ?? null,
     },
+  });
+
+  await prisma.proposalTramite.deleteMany({
+    where: { proposalId: '00000000-0000-4000-8000-000000000202' },
+  });
+  await prisma.proposalTramite.createMany({
+    data: [
+      {
+        proposalId: '00000000-0000-4000-8000-000000000202',
+        type: 'GENERATED',
+        description: 'Proposta criada no sistema.',
+      },
+      {
+        proposalId: '00000000-0000-4000-8000-000000000202',
+        type: 'SENT',
+        description: 'Proposta enviada ao casal.',
+      },
+      {
+        proposalId: '00000000-0000-4000-8000-000000000202',
+        type: 'WAITING',
+        description: 'Aguardando retorno do casal.',
+      },
+    ],
   });
 
   await prisma.payment.upsert({

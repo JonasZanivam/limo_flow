@@ -17,6 +17,7 @@ import {
 } from '../common/whatsapp/templates';
 import { CreateProposalDto } from './dto/create-proposal.dto';
 import { UpdateProposalDto } from './dto/update-proposal.dto';
+import { ProposalTramitesService } from './proposal-tramites.service';
 
 const proposalSelect = {
   id: true,
@@ -62,6 +63,7 @@ export class ProposalsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly pdfService: PdfService,
+    private readonly proposalTramitesService: ProposalTramitesService,
   ) {}
 
   findAll(query: PaginationQueryDto) {
@@ -116,11 +118,20 @@ export class ProposalsService {
       select: proposalSelect,
     });
 
+    await this.proposalTramitesService.log(proposal.id, 'GENERATED');
+
     return this.serializeProposal(proposal);
   }
 
   async update(id: string, dto: UpdateProposalDto) {
-    await this.findOne(id);
+    const current = await this.prisma.proposal.findUnique({
+      where: { id },
+      select: { id: true, status: true },
+    });
+
+    if (!current) {
+      throw new NotFoundException('Proposta não encontrada');
+    }
 
     if (dto.clientId) {
       await this.validateClient(dto.clientId);
@@ -150,6 +161,10 @@ export class ProposalsService {
       data,
       select: proposalSelect,
     });
+
+    if (dto.status !== undefined && dto.status !== current.status) {
+      await this.proposalTramitesService.log(id, dto.status);
+    }
 
     return this.serializeProposal(proposal);
   }

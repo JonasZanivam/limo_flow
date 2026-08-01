@@ -11,6 +11,7 @@ import { DashboardPage } from '@/features/dashboard/DashboardPage';
 import { PaymentsPage } from '@/features/payments/PaymentsPage';
 import { ParametersPage } from '@/features/parameters/ParametersPage';
 import { ProposalsPage } from '@/features/proposals/ProposalsPage';
+import { ProposalDetailPage } from '@/features/proposals/ProposalDetailPage';
 import { UsersPage } from '@/features/users/UsersPage';
 import { VehiclesPage } from '@/features/vehicles/VehiclesPage';
 
@@ -30,6 +31,7 @@ export function AppRouter() {
             <Route element={<RoleRoute roles={['ADMIN']} />}>
               <Route path="clientes" element={<ClientsPage />} />
               <Route path="propostas" element={<ProposalsPage />} />
+              <Route path="propostas/:id" element={<ProposalDetailPage />} />
               <Route path="contratos" element={<ContractsPage />} />
               <Route path="financeiro" element={<PaymentsPage />} />
               <Route path="veiculos" element={<VehiclesPage />} />

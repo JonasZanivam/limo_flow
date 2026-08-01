@@ -15,15 +15,24 @@ import {
 import { UserRole } from '@prisma/client';
 import type { Response } from 'express';
 import { Roles } from '../common/decorators/auth.decorators';
+import {
+  type AuthenticatedUser,
+  CurrentUser,
+} from '../common/decorators/current-user.decorator';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
+import { CreateProposalTramiteDto } from './dto/create-proposal-tramite.dto';
 import { CreateProposalDto } from './dto/create-proposal.dto';
 import { UpdateProposalDto } from './dto/update-proposal.dto';
+import { ProposalTramitesService } from './proposal-tramites.service';
 import { ProposalsService } from './proposals.service';
 
 @Controller('proposals')
 @Roles(UserRole.ADMIN)
 export class ProposalsController {
-  constructor(private readonly proposalsService: ProposalsService) {}
+  constructor(
+    private readonly proposalsService: ProposalsService,
+    private readonly proposalTramitesService: ProposalTramitesService,
+  ) {}
 
   @Get()
   findAll(@Query() query: PaginationQueryDto) {
@@ -48,6 +57,20 @@ export class ProposalsController {
     );
 
     return new StreamableFile(buffer);
+  }
+
+  @Get(':id/tramites')
+  findTramites(@Param('id', ParseUUIDPipe) id: string) {
+    return this.proposalTramitesService.findByProposalId(id);
+  }
+
+  @Post(':id/tramites')
+  createTramite(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: CreateProposalTramiteDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.proposalTramitesService.createManual(id, dto, user.id);
   }
 
   @Get(':id')

@@ -1,7 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { FileDown, MessageCircle, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { DataTablePagination } from '@/components/ui/data-table-pagination';
@@ -239,7 +240,12 @@ export function ProposalsPage() {
                 style={{ height: TABLE_ROW_HEIGHT_PX }}
               >
                 <td className="px-6 py-4">
-                  <p className="font-medium">{formatCoupleName(proposal.client)}</p>
+                  <Link
+                    to={`/propostas/${proposal.id}`}
+                    className="font-medium hover:underline"
+                  >
+                    {formatCoupleName(proposal.client)}
+                  </Link>
                   {proposal.vehicle && (
                     <p className="text-xs text-muted-foreground">
                       {proposal.vehicle.model}
@@ -264,6 +270,12 @@ export function ProposalsPage() {
                 </td>
                 <td className="px-6 py-4">
                   <div className="flex justify-end gap-2">
+                    <Link
+                      to={`/propostas/${proposal.id}`}
+                      className={buttonVariants({ variant: 'outline', size: 'sm' })}
+                    >
+                      Abrir
+                    </Link>
                     <Button
                       variant="outline"
                       size="sm"

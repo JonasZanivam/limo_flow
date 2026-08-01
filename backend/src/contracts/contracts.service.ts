@@ -16,6 +16,7 @@ import {
 } from '../company-settings/company-settings.utils';
 import { CompanySettingsService } from '../company-settings/company-settings.service';
 import { PdfService } from '../pdf/pdf.service';
+import { ProposalTramitesService } from '../proposals/proposal-tramites.service';
 import { PrismaService } from '../prisma/prisma.service';
 import {
   buildWhatsAppUrl,
@@ -72,6 +73,7 @@ export class ContractsService {
     private readonly prisma: PrismaService,
     private readonly pdfService: PdfService,
     private readonly companySettingsService: CompanySettingsService,
+    private readonly proposalTramitesService: ProposalTramitesService,
   ) {}
 
   findAll(query: PaginationQueryDto) {
@@ -181,6 +183,8 @@ export class ContractsService {
       },
       select: contractSelect,
     });
+
+    await this.proposalTramitesService.log(proposal.id, 'CONTRACT_CREATED');
 
     return this.serializeContract(contract);
   }

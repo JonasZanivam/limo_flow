@@ -25,6 +25,16 @@ enum ProposalStatus {
   REJECTED
 }
 
+enum ProposalTramiteType {
+  GENERATED
+  SENT
+  WAITING
+  ACCEPTED
+  REJECTED
+  CONTRACT_CREATED
+  NOTE
+}
+
 enum PaymentType {
   DEPOSIT
   BALANCE
@@ -50,8 +60,9 @@ model User {
   role          UserRole       @default(DRIVER)
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
-  events        Event[]        @relation("EventDriver")
-  refreshTokens RefreshToken[]
+  events           Event[]           @relation("EventDriver")
+  refreshTokens    RefreshToken[]
+  proposalTramites ProposalTramite[]
 }
 
 model RefreshToken {
@@ -133,8 +144,22 @@ model Proposal {
   vehicleId String?
   vehicle   Vehicle?       @relation(fields: [vehicleId], references: [id])
   contract  Contract?
+  tramites  ProposalTramite[]
   createdAt DateTime       @default(now())
   updatedAt DateTime       @updatedAt
+}
+
+model ProposalTramite {
+  id          String              @id @default(uuid())
+  proposalId  String
+  proposal    Proposal            @relation(fields: [proposalId], references: [id], onDelete: Cascade)
+  type        ProposalTramiteType
+  description String?             @db.Text
+  userId      String?
+  user        User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
+  createdAt   DateTime            @default(now())
+
+  @@index([proposalId])
 }
 
 model Contract {

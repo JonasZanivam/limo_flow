@@ -15,6 +15,11 @@ export async function fetchProposals(
   return data;
 }
 
+export async function fetchProposal(id: string): Promise<Proposal> {
+  const { data } = await api.get<Proposal>(`/proposals/${id}`);
+  return data;
+}
+
 export async function createProposal(
   input: CreateProposalInput,
 ): Promise<Proposal> {

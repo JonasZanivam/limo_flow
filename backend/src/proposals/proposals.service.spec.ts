@@ -1,6 +1,7 @@
 import { NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { PdfService } from '../pdf/pdf.service';
+import { ProposalTramitesService } from './proposal-tramites.service';
 import { ProposalsService } from './proposals.service';
 
 describe('ProposalsService', () => {
@@ -64,6 +65,9 @@ describe('ProposalsService', () => {
       {
         generateDocument: jest.fn().mockResolvedValue(Buffer.from('pdf')),
       } as unknown as PdfService,
+      {
+        log: jest.fn().mockResolvedValue(undefined),
+      } as unknown as ProposalTramitesService,
     );
   });
 
