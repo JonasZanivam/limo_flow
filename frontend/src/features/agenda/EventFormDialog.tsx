@@ -28,6 +28,7 @@ import {
   type EventFormValues,
 } from './event-schemas';
 import { fetchDriverOptions, fetchVehicleOptions } from './events-api';
+import { EventChecklistPanel } from '@/features/checklists/EventChecklistPanel';
 
 const selectClassName = cn(
   'h-8 w-full rounded-lg border border-input bg-transparent px-2.5 py-1 text-sm transition-colors outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30',
@@ -272,6 +273,10 @@ export function EventFormDialog({
               <Input id="venue" {...register('venue')} />
             </div>
           </div>
+
+          {isEdit && event && (
+            <EventChecklistPanel eventId={event.id} compact />
+          )}
 
           {errors.root && (
             <p className="text-sm text-destructive">{errors.root.message}</p>

@@ -23,6 +23,7 @@ import {
   type Event,
 } from '@/types/event';
 import { EventFormDialog } from './EventFormDialog';
+import { EventChecklistDialog } from '@/features/checklists/EventChecklistDialog';
 import { formToEventPayload, type EventFormValues } from './event-schemas';
 import {
   createEvent,
@@ -61,6 +62,8 @@ export function AgendaPage() {
     { start: Date; end: Date } | undefined
   >();
   const [eventToDelete, setEventToDelete] = useState<Event | undefined>();
+  const [checklistEvent, setChecklistEvent] = useState<Event | undefined>();
+  const [checklistOpen, setChecklistOpen] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
 
   const { data: events = [], isLoading, isError } = useQuery({
@@ -161,7 +164,11 @@ export function AgendaPage() {
 
     if (isAdmin) {
       openEdit(event);
+      return;
     }
+
+    setChecklistEvent(event);
+    setChecklistOpen(true);
   };
 
   const handleFormSubmit = async (values: EventFormValues) => {
@@ -288,6 +295,14 @@ export function AgendaPage() {
             isLoading={deleteMutation.isPending}
           />
         </>
+      )}
+
+      {!isAdmin && (
+        <EventChecklistDialog
+          open={checklistOpen}
+          onOpenChange={setChecklistOpen}
+          event={checklistEvent}
+        />
       )}
     </div>
   );

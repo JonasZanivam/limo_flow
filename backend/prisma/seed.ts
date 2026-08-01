@@ -92,6 +92,19 @@ async function main() {
     });
 
     demoEventId = demoEvent.id;
+
+    await prisma.eventChecklist.upsert({
+      where: { eventId: demoEvent.id },
+      update: {},
+      create: {
+        eventId: demoEvent.id,
+        carWashed: true,
+        decorated: false,
+        driverConfirmed: true,
+        fuel: false,
+        documentation: false,
+      },
+    });
   }
 
   const demoProposal = await prisma.proposal.upsert({
@@ -163,7 +176,7 @@ async function main() {
   });
 
   console.log(
-    'Seed concluído: usuários, veículos, cliente, evento, propostas, contrato e pagamentos demo.',
+    'Seed concluído: usuários, veículos, cliente, evento, checklist, propostas, contrato e pagamentos demo.',
   );
 }
 
