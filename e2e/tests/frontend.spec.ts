@@ -77,4 +77,38 @@ test.describe('Frontend smoke', () => {
     await expect(page.locator('.fc')).toBeVisible();
     await expect(page.getByText('Confirmado')).toBeVisible();
   });
+
+  test('deve listar propostas na página comercial', async ({ page }) => {
+    await loginAsAdmin(page);
+    await page.goto('/propostas');
+
+    await expect(
+      page.getByRole('heading', { name: 'Propostas' }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: 'Nova proposta' }),
+    ).toBeVisible();
+  });
+
+  test('deve listar contratos emitidos', async ({ page }) => {
+    await loginAsAdmin(page);
+    await page.goto('/contratos');
+
+    await expect(
+      page.getByRole('heading', { name: 'Contratos' }),
+    ).toBeVisible();
+    await expect(page.getByText('Contratos emitidos')).toBeVisible();
+  });
+
+  test('deve listar pagamentos no financeiro', async ({ page }) => {
+    await loginAsAdmin(page);
+    await page.goto('/financeiro');
+
+    await expect(
+      page.getByRole('heading', { name: 'Financeiro' }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: 'Novo pagamento' }),
+    ).toBeVisible();
+  });
 });

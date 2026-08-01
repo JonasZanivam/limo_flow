@@ -5,9 +5,11 @@ import { RoleRoute } from '@/components/auth/RoleRoute';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { AgendaPage } from '@/features/agenda/AgendaPage';
 import { ClientsPage } from '@/features/clients/ClientsPage';
+import { ContractsPage } from '@/features/contracts/ContractsPage';
 import { LoginPage } from '@/features/auth/LoginPage';
 import { DashboardPage } from '@/features/dashboard/DashboardPage';
-import { PlaceholderPage } from '@/features/PlaceholderPage';
+import { PaymentsPage } from '@/features/payments/PaymentsPage';
+import { ProposalsPage } from '@/features/proposals/ProposalsPage';
 import { UsersPage } from '@/features/users/UsersPage';
 import { VehiclesPage } from '@/features/vehicles/VehiclesPage';
 
@@ -26,33 +28,9 @@ export function AppRouter() {
 
             <Route element={<RoleRoute roles={['ADMIN']} />}>
               <Route path="clientes" element={<ClientsPage />} />
-              <Route
-                path="propostas"
-                element={
-                  <PlaceholderPage
-                    title="Propostas"
-                    description="Orçamentos com PDF e envio via wa.me."
-                  />
-                }
-              />
-              <Route
-                path="contratos"
-                element={
-                  <PlaceholderPage
-                    title="Contratos"
-                    description="Geração de contratos com template e PDF."
-                  />
-                }
-              />
-              <Route
-                path="financeiro"
-                element={
-                  <PlaceholderPage
-                    title="Financeiro"
-                    description="Pagamentos, saldo restante e status de cobrança."
-                  />
-                }
-              />
+              <Route path="propostas" element={<ProposalsPage />} />
+              <Route path="contratos" element={<ContractsPage />} />
+              <Route path="financeiro" element={<PaymentsPage />} />
               <Route path="veiculos" element={<VehiclesPage />} />
               <Route path="usuarios" element={<UsersPage />} />
             </Route>

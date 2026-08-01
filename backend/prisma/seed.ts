@@ -72,8 +72,10 @@ async function main() {
     },
   });
 
+  let demoEventId: string | null = null;
+
   if (driver && sprinter) {
-    await prisma.event.upsert({
+    const demoEvent = await prisma.event.upsert({
       where: { id: '00000000-0000-4000-8000-000000000101' },
       update: {},
       create: {
@@ -88,10 +90,80 @@ async function main() {
         driverId: driver.id,
       },
     });
+
+    demoEventId = demoEvent.id;
   }
 
+  const demoProposal = await prisma.proposal.upsert({
+    where: { id: '00000000-0000-4000-8000-000000000201' },
+    update: {},
+    create: {
+      id: '00000000-0000-4000-8000-000000000201',
+      value: 4500,
+      hours: 4,
+      mileage: 80,
+      status: 'ACCEPTED',
+      clientId: demoClient.id,
+      vehicleId: sprinter?.id ?? null,
+    },
+  });
+
+  await prisma.contract.upsert({
+    where: { id: '00000000-0000-4000-8000-000000000301' },
+    update: {},
+    create: {
+      id: '00000000-0000-4000-8000-000000000301',
+      content:
+        'Contrato demo para Ana & Pedro — serviço de limousine no casamento de 15/12/2026.',
+      clientId: demoClient.id,
+      proposalId: demoProposal.id,
+    },
+  });
+
+  await prisma.proposal.upsert({
+    where: { id: '00000000-0000-4000-8000-000000000202' },
+    update: {},
+    create: {
+      id: '00000000-0000-4000-8000-000000000202',
+      value: 3200,
+      hours: 3,
+      status: 'WAITING',
+      clientId: demoClient.id,
+      vehicleId: sprinter?.id ?? null,
+    },
+  });
+
+  await prisma.payment.upsert({
+    where: { id: '00000000-0000-4000-8000-000000000401' },
+    update: {},
+    create: {
+      id: '00000000-0000-4000-8000-000000000401',
+      amount: 1500,
+      type: 'DEPOSIT',
+      status: 'PAID',
+      method: 'PIX',
+      paidAt: new Date('2026-08-01T12:00:00.000Z'),
+      clientId: demoClient.id,
+      eventId: demoEventId,
+    },
+  });
+
+  await prisma.payment.upsert({
+    where: { id: '00000000-0000-4000-8000-000000000402' },
+    update: {},
+    create: {
+      id: '00000000-0000-4000-8000-000000000402',
+      amount: 3000,
+      type: 'BALANCE',
+      status: 'PENDING',
+      dueDate: new Date('2026-12-01T00:00:00.000Z'),
+      clientId: demoClient.id,
+      eventId: demoEventId,
+    },
+  });
+
   console.log(
-    'Seed concluído: usuários admin/motorista, veículos, cliente e evento demo.',
+    'Seed concluído: usuários, veículos, cliente, evento, propostas, contrato e pagamentos demo.',
   );
 }
 
