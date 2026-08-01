@@ -6,7 +6,7 @@ npx prisma migrate deploy
 
 if [ "${RUN_SEED}" = "true" ]; then
   echo "Executando seed..."
-  npm run db:seed
+  node dist/prisma/seed.js
 fi
 
 exec "$@"
