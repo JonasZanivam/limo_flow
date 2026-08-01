@@ -78,6 +78,15 @@ test.describe('Frontend smoke', () => {
     await expect(page.getByText('Confirmado')).toBeVisible();
   });
 
+  test('deve exibir checklist ao editar evento', async ({ page }) => {
+    await loginAsAdmin(page);
+    await page.goto('/agenda');
+
+    await page.locator('.fc-event').first().click();
+    await expect(page.getByText('Checklist pré-evento')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Carro lavado' })).toBeVisible();
+  });
+
   test('deve listar propostas na página comercial', async ({ page }) => {
     await loginAsAdmin(page);
     await page.goto('/propostas');

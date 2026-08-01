@@ -108,6 +108,7 @@ export class EventsService {
         clientId: dto.clientId,
         vehicleId: dto.vehicleId || null,
         driverId: dto.driverId || null,
+        checklist: { create: {} },
       },
       select: eventSelect,
     });

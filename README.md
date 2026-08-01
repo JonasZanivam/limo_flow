@@ -135,6 +135,6 @@ Ver issues do repositório para o roadmap completo.
 - [x] Agenda
 - [x] Propostas e Contratos
 - [x] Financeiro
-- [ ] Checklist
+- [x] Checklist
 - [x] Dashboard
 - [x] WhatsApp wa.me
