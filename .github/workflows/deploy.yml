@@ -1,0 +1,35 @@
+name: Deploy VPS
+
+on:
+  push:
+    branches: [develop]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-vps
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy Hostinger VPS
+    runs-on: ubuntu-latest
+    if: github.repository == 'JonasZanivam/limo_flow'
+
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_SSH_PORT || 22 }}
+          script: |
+            set -e
+            cd "${{ secrets.VPS_APP_PATH }}"
+            git fetch origin develop
+            git checkout develop
+            git pull origin develop
+            docker compose -f docker-compose.prod.yml --env-file .env build
+            docker compose -f docker-compose.prod.yml --env-file .env up -d
+            docker compose -f docker-compose.prod.yml ps
+            docker image prune -f

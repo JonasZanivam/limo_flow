@@ -103,6 +103,19 @@ cd e2e && npm install && npx playwright install chromium && npm test
 
 Documentação completa: [docs/testes.md](docs/testes.md)
 
+## Deploy (VPS / Hostinger)
+
+Stack Docker de produção + CI/CD com GitHub Actions:
+
+```bash
+# Na VPS (primeira vez)
+cp .env.production.example .env
+# edite .env, depois:
+docker compose -f docker-compose.prod.yml --env-file .env up -d --build
+```
+
+Documentação completa: [docs/deploy-hostinger.md](docs/deploy-hostinger.md)
+
 ## Credenciais demo (seed)
 
 | Perfil    | E-mail                    | Senha     |
