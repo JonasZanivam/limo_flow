@@ -7,6 +7,7 @@ export type Project = {
   status: 'Em desenvolvimento' | 'Concluído' | 'Em estudo';
   repoUrl?: string;
   demoUrl?: string;
+  appUrl?: string;
   highlights: string[];
   accent: 'gold' | 'blue' | 'emerald';
 };
@@ -21,6 +22,7 @@ export const projects: Project[] = [
     tags: ['React', 'NestJS', 'Prisma', 'PostgreSQL', 'Docker', 'Grafana'],
     status: 'Em desenvolvimento',
     repoUrl: 'https://github.com/JonasZanivam/limo_flow',
+    appUrl: '/limoflow/',
     highlights: [
       'Auth JWT com perfis Admin e Motorista',
       'CRUD de clientes, veículos e eventos',

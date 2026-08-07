@@ -15,9 +15,11 @@ import { ProposalDetailPage } from '@/features/proposals/ProposalDetailPage';
 import { UsersPage } from '@/features/users/UsersPage';
 import { VehiclesPage } from '@/features/vehicles/VehiclesPage';
 
+const routerBasename = import.meta.env.BASE_URL.replace(/\/$/, '');
+
 export function AppRouter() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={routerBasename || undefined}>
       <Routes>
         <Route element={<GuestRoute />}>
           <Route path="/login" element={<LoginPage />} />

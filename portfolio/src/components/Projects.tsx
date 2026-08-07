@@ -1,5 +1,5 @@
 import { projects, type Project } from '@/data/projects';
-import { ExternalLink, FolderGit2 } from 'lucide-react';
+import { ExternalLink, FolderGit2, Rocket } from 'lucide-react';
 
 const accentStyles: Record<Project['accent'], string> = {
   gold: 'border-primary/30 bg-primary/5 text-primary',
@@ -17,14 +17,11 @@ export function Projects() {
   return (
     <section id="projetos" className="section-container">
       <div className="mb-12 max-w-2xl">
-        <p className="mb-2 text-sm font-medium uppercase tracking-[0.2em] text-primary">Projetos</p>
-        <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Apps de estudo</h2>
+        <p className="mb-2 text-sm font-medium uppercase tracking-[0.2em] text-primary">Apps</p>
+        <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Minhas apps</h2>
         <p className="mt-4 text-muted-foreground">
-          Projetos onde aplico e consolido conhecimento. Edite{' '}
-          <code className="rounded bg-muted px-1.5 py-0.5 text-sm text-primary">
-            src/data/projects.ts
-          </code>{' '}
-          para adicionar novos apps.
+          Projetos que desenvolvo para aprender na prática. Clique em &quot;Abrir app&quot; para acessar o
+          sistema — como o LimoFlow, disponível neste mesmo domínio.
         </p>
       </div>
 
@@ -47,7 +44,16 @@ export function Projects() {
                 <p className="text-lg text-muted-foreground">{project.description}</p>
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
+                {project.appUrl && (
+                  <a
+                    href={project.appUrl}
+                    className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+                  >
+                    <Rocket className="size-4" />
+                    Abrir app
+                  </a>
+                )}
                 {project.repoUrl && (
                   <a
                     href={project.repoUrl}
@@ -64,7 +70,7 @@ export function Projects() {
                     href={project.demoUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
+                    className="inline-flex items-center gap-2 rounded-lg border border-border px-4 py-2 text-sm transition-colors hover:border-primary/40 hover:text-primary"
                   >
                     <ExternalLink className="size-4" />
                     Demo

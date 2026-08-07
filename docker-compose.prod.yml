@@ -46,8 +46,8 @@ services:
 
   frontend:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: web/Dockerfile
     container_name: limoflow-frontend
     restart: unless-stopped
     ports:

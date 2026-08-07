@@ -34,12 +34,12 @@ export function Hero() {
         </div>
 
         <div className="mt-10 flex flex-wrap gap-4">
-          <a
-            href="#projetos"
-            className="rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
-          >
-            Ver projetos
-          </a>
+        <a
+          href="#projetos"
+          className="rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+        >
+          Minhas apps
+        </a>
           <a
             href="#curriculo"
             className="glass-card rounded-xl px-6 py-3 text-sm font-semibold transition-colors hover:border-primary/40"

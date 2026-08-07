@@ -135,7 +135,9 @@ limo_flow/
 
 ### Portfólio pessoal
 
-Site estático com currículo e showcase de projetos de estudo:
+Site estático servido na **raiz do domínio** (`/`). O LimoFlow fica em `/limoflow/` no mesmo deploy.
+
+Desenvolvimento local:
 
 ```bash
 cd portfolio && npm install && npm run dev

@@ -6,8 +6,9 @@ Guia para publicar o LimoFlow em uma VPS (Hostinger ou similar) com **Docker** e
 
 ```
 Internet → Nginx (frontend container, porta 80)
-              ├── /        → React (SPA)
-              └── /api/*   → NestJS (backend container)
+              ├── /              → Portfólio (site pessoal)
+              ├── /limoflow/*    → LimoFlow (CRM React)
+              └── /api/*         → NestJS (backend container)
                                     └── PostgreSQL
 ```
 
@@ -64,7 +65,11 @@ docker compose -f docker-compose.prod.yml ps
 
 Acesse `http://IP-DA-VPS` (ou seu domínio apontando para a VPS).
 
-Health check da API (via proxy): `http://IP-DA-VPS/api/health`
+| URL | Conteúdo |
+|-----|----------|
+| `/` | Portfólio (currículo, contato, apps) |
+| `/limoflow/` | Sistema LimoFlow (login) |
+| `/api/health` | Health check da API |
 
 ## 4. HTTPS (recomendado)
 
