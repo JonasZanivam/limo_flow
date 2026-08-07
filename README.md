@@ -129,8 +129,19 @@ Documentação completa: [docs/deploy-hostinger.md](docs/deploy-hostinger.md)
 limo_flow/
 ├── docker-compose.yml
 ├── backend/          # NestJS + Prisma
-└── frontend/         # React + Vite
+├── frontend/         # React + Vite
+└── portfolio/        # Site pessoal (currículo + projetos)
 ```
+
+### Portfólio pessoal
+
+Site estático com currículo e showcase de projetos de estudo:
+
+```bash
+cd portfolio && npm install && npm run dev
+```
+
+Ver [portfolio/README.md](portfolio/README.md).
 
 ## Branches
 

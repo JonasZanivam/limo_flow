@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: oklch(0.13 0.01 260);
+  --color-foreground: oklch(0.96 0.01 85);
+  --color-card: oklch(0.17 0.015 260);
+  --color-card-foreground: oklch(0.96 0.01 85);
+  --color-muted: oklch(0.22 0.015 260);
+  --color-muted-foreground: oklch(0.68 0.02 85);
+  --color-primary: oklch(0.78 0.14 85);
+  --color-primary-foreground: oklch(0.15 0.02 85);
+  --color-border: oklch(0.28 0.02 260);
+  --color-accent-blue: oklch(0.72 0.14 250);
+  --color-accent-emerald: oklch(0.72 0.14 160);
+  --font-sans: "Segoe UI", system-ui, -apple-system, sans-serif;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    margin: 0;
+    min-height: 100vh;
+    font-family: var(--font-sans);
+  }
+
+  #root {
+    min-height: 100vh;
+  }
+
+  ::selection {
+    background: color-mix(in oklch, var(--color-primary) 35%, transparent);
+  }
+}
+
+@layer utilities {
+  .section-container {
+    @apply mx-auto w-full max-w-5xl px-6 py-20;
+  }
+
+  .glass-card {
+    @apply rounded-xl border border-border bg-card/80 backdrop-blur-sm;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary via-amber-200 to-primary bg-clip-text text-transparent;
+  }
+}
