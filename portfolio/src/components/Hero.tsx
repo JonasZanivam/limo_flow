@@ -12,7 +12,7 @@ export function Hero() {
 
       <div className="section-container relative">
         <p className="mb-4 text-sm font-medium uppercase tracking-[0.2em] text-primary">
-          Portfólio & projetos de estudo
+          Portfólio & projetos pessoais
         </p>
 
         <h1 className="max-w-3xl text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl">

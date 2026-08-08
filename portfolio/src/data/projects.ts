@@ -16,9 +16,9 @@ export const projects: Project[] = [
   {
     id: 'limoflow',
     title: 'LimoFlow',
-    description: 'Mini CRM para serviços de limousine em casamentos.',
+    description: 'Mini CRM para serviços de limousine em casamentos e eventos.',
     longDescription:
-      'Aplicação full stack com agenda, propostas, contratos, financeiro, checklists e dashboard. Inclui autenticação JWT com roles, testes E2E com Playwright e stack de observabilidade com Grafana, Loki e Tempo.',
+      'Aplicação full stack com agenda, propostas, contratos, financeiro, checklists e dashboard. Inclui autenticação JWT com roles, testes E2E com Playwright e stack de observabilidade com Grafana.',
     tags: ['React', 'NestJS', 'Prisma', 'PostgreSQL', 'Docker', 'Grafana'],
     status: 'Em desenvolvimento',
     repoUrl: 'https://github.com/JonasZanivam/limo_flow',
@@ -31,7 +31,24 @@ export const projects: Project[] = [
     ],
     accent: 'gold',
   },
-  // Adicione mais projetos de estudo abaixo, por exemplo:
+  {
+    id: 'my-recipe',
+    title: 'My Recipe',
+    description: 'App para escrever e guardar receitas culinárias.',
+    longDescription:
+      'Aplicação full stack multi-usuário para criar, organizar e buscar receitas com ingredientes e passos. Autenticação JWT, deploy Docker na mesma VPS do portfólio.',
+    tags: ['React', 'NestJS', 'Prisma', 'PostgreSQL', 'Docker'],
+    status: 'Em desenvolvimento',
+    repoUrl: 'https://github.com/JonasZanivam/my_recipe',
+    appUrl: '/my-recipe/',
+    highlights: [
+      'Receitas com ingredientes e modo de preparo',
+      'Busca por título e tags',
+      'Multi-usuário com login e registro',
+      'Deploy em jonjon.tech/my-recipe/',
+    ],
+    accent: 'emerald',
+  },
   // {
   //   id: 'meu-app',
   //   title: 'Meu App',

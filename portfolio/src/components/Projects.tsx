@@ -20,8 +20,8 @@ export function Projects() {
         <p className="mb-2 text-sm font-medium uppercase tracking-[0.2em] text-primary">Apps</p>
         <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Minhas apps</h2>
         <p className="mt-4 text-muted-foreground">
-          Projetos que desenvolvo para aprender na prática. Clique em &quot;Abrir app&quot; para acessar o
-          sistema — como o LimoFlow, disponível neste mesmo domínio.
+          Confira os projetos que desenvolvi abaixo. Clique em &quot;Abrir app&quot; para acessar o
+          sistema ou &quot;Repositório&quot; para acessar o código fonte no GitHub.
         </p>
       </div>
 

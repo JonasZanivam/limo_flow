@@ -9,15 +9,7 @@ export function Resume() {
           <p className="mb-2 text-sm font-medium uppercase tracking-[0.2em] text-primary">Currículo</p>
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Experiência & formação</h2>
           <p className="mt-4 text-muted-foreground">
-            Personalize em{' '}
-            <code className="rounded bg-muted px-1.5 py-0.5 text-sm text-primary">
-              src/data/resume.ts
-            </code>{' '}
-            e coloque seu PDF em{' '}
-            <code className="rounded bg-muted px-1.5 py-0.5 text-sm text-primary">
-              public/curriculo-jonas-zanivam.pdf
-            </code>
-            .
+            Confira minha experiência e formação abaixo.
           </p>
         </div>
 
